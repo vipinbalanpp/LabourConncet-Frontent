@@ -1,13 +1,10 @@
-import { FaArrowRight } from "react-icons/fa"
+
 import Worker from "./Worker"
 
 const TopRatedWorkers = () => {
     return (
-        <div>
-        <div className="flex justify-between pe-10">
-            <h1 className="p-5 text-black text-3xl">Top Rated Workers</h1>
-            <button className="flex  border text-yellow-500 border-slate-300 bg-white p-2 h-10">View All <span className="ms-2 mt-1"><FaArrowRight /></span></button>
-        </div>
+        <div className="mt-24">
+            <h1 className="p-5 text-black font-semibold  text-3xl ps-24">Top Rated Workers</h1>
       <div className="flex flex-wrap justify-between px-20">
         <Worker/>
         <Worker/>
@@ -17,7 +14,11 @@ const TopRatedWorkers = () => {
         <Worker/>
         <Worker/>
         <Worker/>
-
+      </div>
+      <div className="flex justify-end mt-2">
+      <button className="flex pt-5 text-sm  text-yellow-500  bg-white  h-10 pe-14">
+          View All
+        </button>
       </div>
     </div>
     )

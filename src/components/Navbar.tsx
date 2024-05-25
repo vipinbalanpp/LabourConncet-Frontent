@@ -1,17 +1,12 @@
 import { NavLink } from "react-router-dom";
-import imageFile from "../assets/Screenshot__161_-removebg-preview.png";
+import Logo from "./Logo";
+
 
 const Navbar = () => {
   return (
     <div>
       <div className="flex justify-between">
-        <div className="flex">
-          <img className="h-[50px]" src={imageFile} alt="LabourConnect" />
-          <h1 className="py-5 text-xl">
-            <span className="font-bold text-black">Labour</span>
-            <span className="font-bold text-yellow-500">Connect</span>
-          </h1>
-        </div>
+       <Logo/>
         <div className="flex py-5 gap-x-8 pe-[100px] text-black font-semibold">
           <NavLink
             to={"/"}
@@ -26,7 +21,7 @@ const Navbar = () => {
             Home{" "}
           </NavLink>
           <NavLink
-            to={"/sd"}
+            to={"/find-worker"}
             className={({ isActive }) => {
               return `hover:text-blue-600 cursor-pointer  hover:scale-95 duration-300 ${
                 isActive
@@ -74,7 +69,7 @@ const Navbar = () => {
             About us
           </NavLink>
           <NavLink
-            to={"/sdss"}
+            to={"/login"}
             className={({ isActive }) => {
               return `hover:text-blue-600 cursor-pointer  hover:scale-95 duration-300 ${
                 isActive
