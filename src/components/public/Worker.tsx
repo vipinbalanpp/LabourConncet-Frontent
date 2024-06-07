@@ -1,5 +1,5 @@
-import image from "../assets/user.png";
-import service from "../assets/plumbing.jpg";
+import image from "../../assets/user.png";
+import service from "../../assets/plumbing.jpg";
 import { FaStar } from "react-icons/fa";
 
 const Worker = () => {

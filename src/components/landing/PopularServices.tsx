@@ -1,4 +1,5 @@
-import Service from "./Service";
+import Service from "../public/Service";
+
 const PopularServices = () => {
   return (
     <div>

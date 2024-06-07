@@ -7,26 +7,25 @@ type InputWithIconType = {
   icon: string;
   placeholder: string;
   type: string;
-  onchange?:(vlue:string)=>void
+  onchange?:(value:string)=>void
+  setEmailVerified?:(value:string)=>void
 };
 
-const InputWithIcon = ({ title, name, icon, placeholder, type,onchange }: InputWithIconType) => {
-
-
+const InputWithIcon = ({ title, name, icon, placeholder, type,onchange ,setEmailVerified}: InputWithIconType) => {
+   
   return (
-    <div>
+    <div className="mb-5">
       <p>
-        <label className="text-black ps-5" htmlFor={name}>{title}</label>
+        <label className="text-black ps-5" >{title}</label>
       </p>
       <div className="flex items-center">
-        <div className="sign-up-icon">{icon}</div>
+        <div>{icon}</div>
         <Field
           className="sign-up-input w-full bg-white text-black ps-2  border placeholder:text-sm   border-yellow-300 h-10"
-          id={name}
           name={name}
           type={type}
           placeholder={placeholder}
-          validate={onchange}
+          validate={ onchange}
         />
       </div>
       <ErrorMessage

@@ -1,27 +1,25 @@
-import { createAsyncThunk, isRejectedWithValue } from "@reduxjs/toolkit";
-import axios, { AxiosError } from "axios";
-import { AuthBaseUrl, NotificationBaseUrl } from "../../config/constants";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 import instance from "../../config/axiozConfig";
+import { ILoginData, IUserCredentials } from "../../interfaces/user";
+import { handleError } from "../../config/errorConfig";
 
 
-type userCredentialsType={
-    fullName : string,
-      email:string,
-      password:string,
-      role:string
-}
+
 export const userSignUp = createAsyncThunk(
     "user/userSignUp",
-    async (userCredentials:userCredentialsType,{rejectWithValue}) =>{
+    async (userCredentials:IUserCredentials,{rejectWithValue}) =>{
         try{
             const {data} = await instance.post(
-                `${AuthBaseUrl}/register`,
+                `auth/api/v1/user/register`,
                 userCredentials
             )
+            console.log(data);
+            
             return data
         }catch(err){
             const axiosError = err as AxiosError
-            console.log(axiosError)
+            console.log(axiosError); 
         }
     }
 )
@@ -31,12 +29,14 @@ export const sendOtp = createAsyncThunk(
         try{
             console.log(email,"when sending")
             const response = await instance.post(
-                `notification/send-otp?email=${email}`
+                `notification/api/v1/send-otp?email=${email}`
             )
             return response;
         }catch(err){
+            
             const axiosError = err as AxiosError
-            console.log(axiosError);
+            console.log(axiosError,'from user actions')
+            return handleError(axiosError,rejectWithValue);
         }
     }
 )
@@ -49,7 +49,7 @@ export const verifyOtp = createAsyncThunk(
         async (data:dataType,{rejectWithValue}) =>{
         try{
             const response = await instance.post(
-                `/notification/verify-otp?email=${data.email}&otp=${data.otp}`
+                `notification/api/v1/verify-otp?email=${data.email}&otp=${data.otp}`
             )
             console.log(response,"fshfosdfsd");
             
@@ -60,3 +60,29 @@ export const verifyOtp = createAsyncThunk(
         }
     }
 )
+
+export const login = createAsyncThunk(
+    'auth/login', async (loginData:ILoginData,{rejectWithValue}) => {
+    try{
+        const response = await instance.post('auth/api/v1/login', loginData);
+    return response.data;
+    }catch(err){
+        console.log(rejectWithValue);
+        const axiosError = err as AxiosError
+
+        return handleError(axiosError,rejectWithValue)
+        
+    }
+  });
+  export const fetchUserData = createAsyncThunk (
+       'user/userDetails',async ()=>{
+        try{
+            const response = await instance.get('user/api/v1/userDetails',{withCredentials: true })
+            console.log(response,'response in slice ');
+            return response.data
+        }
+        catch(err){
+            const axiosError = err as AxiosError
+            console.log(axiosError);
+       } })
+

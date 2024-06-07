@@ -1,5 +1,5 @@
 import { FaStar } from "react-icons/fa";
-import user from "../assets/user.png"
+import user from "../../assets/user.png"
 
 const Testimonial = () => {
   return (

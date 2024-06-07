@@ -1,5 +1,5 @@
 import { FaArrowRight } from "react-icons/fa";
-import Testimonial from "./Testimonial";
+import Testimonial from "../public/Testimonial";
 
 const TestMonialList = () => {
   return (

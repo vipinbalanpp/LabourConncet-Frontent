@@ -1,4 +1,5 @@
-import Worker from "../components/Worker"
+import Worker from "../../components/public/Worker"
+
 
 const WorkerListing = () => {
     return (

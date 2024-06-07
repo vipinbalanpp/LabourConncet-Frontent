@@ -18,9 +18,9 @@ const PasswordInputWithIcon = ({ title, name, icon, placeholder, canEdit }: Pass
   };
 
   return (
-    <div>
+    <div className="mb-5">
       <p>
-        <label className="text-black ps-5" htmlFor={name}>{title}</label>
+        <label className="text-black ps-5" >{title}</label>
       </p>
       <div className="relative flex items-center">
         <div className="sign-up-icon">{icon}</div>

@@ -1,13 +1,16 @@
 import { FaArrowRight } from "react-icons/fa";
-import Banner from "../components/Banner";
-import PopularServices from "../components/PopularServices";
-import TestMonialList from "../components/TestMonialList";
-import TopRatedWorkers from "../components/TopRatedWorkers";
+import Banner from "../components/landing/Banner";
+
 import image from "../assets/file (1).png";
 import client from "../assets/clinet1.png";
 import { useNavigate } from "react-router-dom";
+import PopularServices from "../components/landing/PopularServices";
+import TopRatedWorkers from "../components/landing/TopRatedWorkers";
+import TestMonialList from "../components/landing/TestMonialList";
+
 
 const Home = () => {
+
   const navigate = useNavigate();
   const handleClientRegister = () => {
     navigate("/user-register");

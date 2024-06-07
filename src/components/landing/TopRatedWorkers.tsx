@@ -1,14 +1,14 @@
+import Worker from "../public/Worker"
 
-import Worker from "./Worker"
 
 const TopRatedWorkers = () => {
     return (
-        <div className="mt-24">
+        <div className="">
             <h1 className="p-5 text-black font-semibold  text-3xl ps-24">Top Rated Workers</h1>
       <div className="flex flex-wrap justify-between px-20">
         <Worker/>
         <Worker/>
-        <Worker/>
+        <Worker />
         <Worker/>
         <Worker/>
         <Worker/>
