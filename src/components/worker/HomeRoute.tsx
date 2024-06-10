@@ -1,8 +1,9 @@
 
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import Home from "../pages/Home";
-import { RootState } from "../redux/store";
+import Home from "../../pages/Home";
+import { RootState } from "../../redux/store";
+
 
 const HomeRoute = () => {
     const user = useSelector((state: RootState) => state.user.user);

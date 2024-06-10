@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import instance from "../../config/axiozConfig";
 import { AxiosError } from "axios";
+import { Iservice } from "../../interfaces/admin";
 
 
 
@@ -88,6 +89,37 @@ export const unBlockWorker = createAsyncThunk(
         try{
             const {data} = await instance.patch(
                 `user/api/v1/unBlockWorker?email=${email}`
+            )
+            console.log(data);
+            return data
+        }catch(err){
+            const axiosError = err as AxiosError
+            console.log(axiosError); 
+        }
+    }
+)
+export const createService = createAsyncThunk(
+    "admin/create-service",
+    async (serviceDetails:Iservice) =>{
+        try{
+            const {data} = await instance.post(
+                `user/api/v1/create-service`,
+                serviceDetails
+            )
+            console.log(data);
+            return data
+        }catch(err){
+            const axiosError = err as AxiosError
+            console.log(axiosError); 
+        }
+    }
+)
+export const getAllServices = createAsyncThunk(
+    "admin/get-services",
+    async () =>{
+        try{
+            const {data} = await instance.get(
+                "user/api/v1/get-services"
             )
             console.log(data);
             return data

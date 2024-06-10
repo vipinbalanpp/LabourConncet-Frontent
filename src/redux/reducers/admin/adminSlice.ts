@@ -3,6 +3,8 @@ import { IUserDetailsForStore } from "../../../interfaces/user";
 import {
   blockUser,
   blockWorker,
+  createService,
+  getAllServices,
   getAllUsers,
   getAllWorkers,
   unBlockUser,
@@ -10,12 +12,14 @@ import {
 } from "../../actions/adminActions";
 import toast from "react-hot-toast";
 import { IWorkerDetailsForStore } from "../../../interfaces/worker";
+import { Iservice } from "../../../interfaces/admin";
 
 const adminSlice = createSlice({
   name: "adminSlice",
   initialState: {
     users: [] as IUserDetailsForStore[],
     workers: [] as IWorkerDetailsForStore[],
+    services: [] as Iservice[],
     error: null as string | null,
     loading: false as boolean,
   },
@@ -105,9 +109,38 @@ const adminSlice = createSlice({
       .addCase(unBlockWorker.fulfilled, (state, action) => {
         state.loading = false;
         toast.success(action.payload);
-        // state.users = action.payload
       })
       .addCase(unBlockWorker.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(getAllServices.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllServices.fulfilled, (state, action) => {
+        state.loading = false;
+        state.services = action.payload;
+        console.log(action.payload,'sdlfjkloisdjos');
+      
+        toast.success(action.payload);
+      })
+      .addCase(getAllServices.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+        
+      })
+      .addCase(createService.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createService.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log(action.payload);
+        
+        toast.success(action.payload);
+      })
+      .addCase(createService.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

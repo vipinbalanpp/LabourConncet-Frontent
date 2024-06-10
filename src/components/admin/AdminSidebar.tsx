@@ -1,4 +1,4 @@
-import { useState } from 'react';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartBar, faUsers, faHardHat, faTools, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { logout } from '../../redux/reducers/user/UserSlice';
@@ -34,7 +34,7 @@ const AdminSidebar = () => {
                             <FontAwesomeIcon icon={faHardHat} className="mr-2" />
                             Workers
                         </li>
-                        <li className={`flex items-center py-4 rounded-xl hover:bg-gray-900 duration-300 hover:translate-x-3 px-4 cursor-pointer`} >
+                        <li className={`flex items-center py-4 rounded-xl hover:bg-gray-900 duration-300 hover:translate-x-3 px-4 cursor-pointer`}  onClick={() => handleclick("/admin/services-list")} >
                             <FontAwesomeIcon icon={faTools} className="mr-2" />
                             Services
                         </li>

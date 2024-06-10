@@ -1,11 +1,15 @@
 import image from "../../assets/user.png";
 import service from "../../assets/plumbing.jpg";
 import { FaStar } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Worker = () => {
+  const navigate = useNavigate();
   return (
     <>
-      <div className=" w-[320px] h-[200px]  mt-10 border border-1 shadow-md duration-300 hover:scale-110 hover:shadow-4xl cursor-pointer">
+      <div className=" w-[320px] h-[200px]  mt-3 border border-1 shadow-md duration-300 hover:scale-110 hover:shadow-4xl cursor-pointer"
+      onClick={()=> navigate('/worker-details')}
+      >
         <div className="flex  ">
           <img className="w-14 m-5  h-14 rounded-full" src={image} />
           <div className="">
