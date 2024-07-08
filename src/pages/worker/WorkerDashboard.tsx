@@ -1,18 +1,13 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../redux/store';
-import { logout } from '../../redux/reducers/user/UserSlice';
-import Logo from '../../components/public/Logo';
-import WorkerSideBar from '../../components/worker/WorkerSideBar';
+import WorkerSideBar from "../../components/worker/WorkerSideBar";
 
 const WorkerDashboard = () => {
-  
-
-    return (
-          <>
-          <WorkerSideBar/>
-          </>
-    );
-}
+  return (
+    <div>
+      <div className="pt-28 h-screen">
+        <p className="text-black ps-96 text-4xl">Dashboard</p>
+      </div>
+    </div>
+  );
+};
 
 export default WorkerDashboard;

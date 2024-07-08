@@ -43,7 +43,6 @@ const ClientRegister = () => {
     email: string;
     confirmPassword: string;
   }) => {
-    console.log(values);
     let formData = {
       fullName: values.fullName,
       email: values.email,
@@ -63,7 +62,6 @@ const ClientRegister = () => {
       .catch((error) => {
         console.error("promise error", error);
       });
-    console.log("from therer tat is defi", response);
   };
 
   const handleVerifyEmailButtonClicked = async () => { 
@@ -77,9 +75,11 @@ const ClientRegister = () => {
       toast.error('Enter valid email id')
       return;
   }
-    setVerifyButtonClicked(true);
+   
     const response = await dispatch(sendOtp(emailValue));
-    console.log(response, "fdklfjlsdfjoisdfhoisdfhsoidfhoisdfhsdoi");
+    console.log(response,'response of seinding otp');
+    if(response.meta.requestStatus !== "rejected")
+    setVerifyButtonClicked(true);
   };
 
   const handleGoogleLogin = () => {
@@ -94,7 +94,7 @@ const ClientRegister = () => {
     <div className="flex h-screen">
       <div className="w-1/2 p-32">
         <div className="absolute top-0 left-0">
-          <Logo />
+          <Logo color="black" />
         </div>
         <img
           className="h-full w-full object-cover"

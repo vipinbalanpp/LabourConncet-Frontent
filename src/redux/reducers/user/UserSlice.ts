@@ -1,16 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { fetchUserData, login, sendOtp, userSignUp, verifyOtp } from "../../actions/userActions"
-import { workerSignUp } from "../../actions/workerActions"
-import toast from "react-hot-toast"
+import { IUserDetailsForStore ,IBooking} from "../../../interfaces/user";
+import { fetchUserData, getAllBookings, login, sendOtp, userSignUp, verifyOtp } from "../../actions/userActions"
+import { workerSignUp } from "../../actions/workerActions"  
 import {  removeCookie } from "typescript-cookie";
 import instance from "../../../config/axiozConfig";
-import { IUserDetailsForStore } from "../../../interfaces/user";
 import { IWorkerDetailsForStore } from "../../../interfaces/worker";
+import { access } from "fs";
+
 
 const userSlice = createSlice({
     name:"userSlice",
     initialState:{
         user: null as IUserDetailsForStore | IWorkerDetailsForStore | null,
+        bookings :[] as  IBooking[],
         error: null as string | null,
         loading: false as boolean ,
         message:  "" as string
@@ -114,6 +116,18 @@ const userSlice = createSlice({
                 
               })
               .addCase(fetchUserData.rejected,(state,action)=>{
+                state.loading = false
+                state.error = action.payload as string 
+              })
+              .addCase(getAllBookings.pending,(state) =>{
+                state.loading = true;
+              })
+              .addCase(getAllBookings.fulfilled,(state,action) => {
+                    state.loading = false
+                    console.log(action.payload,'This is all bookings from backend');
+                    state.bookings = action.payload;
+              })
+              .addCase(getAllBookings.rejected, (state,action) => {
                 state.loading = false
                 state.error = action.payload as string 
               })

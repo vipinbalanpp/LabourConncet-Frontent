@@ -2,7 +2,10 @@ import image from '../../assets/file (1).png';
 
 const Banner = () => {
     return (
-        <div className='flex w-full py-10  md:pt-28 bg-slate-100 '>
+        <div
+  className='flex w-full py-10 md:pt-28'
+
+>
             <div className='md:w-1/2 w-full md:py-44 ps-10 md:ps-20'>
                 <h1>
                 <span className='md:text-3xl text-lg font-semibold text-yellow-600'><span className='text-black'>Connecting You to Skilled Hands:</span> Find the Right</span>
@@ -17,6 +20,7 @@ const Banner = () => {
                 </div>
                 <div className='hidden md:block  md:w-1/2'>
                     <img src={image} alt="" />
+                   
                 </div>
         </div>
     )

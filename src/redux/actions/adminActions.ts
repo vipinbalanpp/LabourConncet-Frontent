@@ -1,16 +1,23 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import instance from "../../config/axiozConfig";
 import { AxiosError } from "axios";
-import { Iservice } from "../../interfaces/admin";
+import { IGetAllUsersParams, IGetAllWorkersParams, Iservice } from "../../interfaces/admin";
 
 
 
 export const getAllUsers = createAsyncThunk(
     "admin/getAllUsers",
-    async () =>{
+    async ({pageNumber,isBlocked,searchInput}:IGetAllUsersParams) =>{
         try{
             const {data} = await instance.get(
-                `user/api/v1/getAllUsers`
+                `user/api/v1/getAllUsers?`,
+                {
+                    params:{
+                        pageNumber,
+                        searchInput,
+                        isBlocked
+                    }
+                }
             )
             console.log(data);
             
@@ -23,10 +30,19 @@ export const getAllUsers = createAsyncThunk(
 )
 export const getAllWorkers = createAsyncThunk(
     "admin/getAllWorkers",
-    async () =>{
+    async ({pageNumber,isBlocked,searchInput,serviceId,pageSize}:IGetAllWorkersParams) =>{
         try{
             const {data} = await instance.get(
-                `user/api/v1/getAllWorkers`
+                `user/api/v1/getAllWorkers?`,
+               {
+                params:{
+                    pageNumber,
+                    pageSize,
+                    searchInput,
+                    isBlocked,
+                    serviceId
+                }
+               }
             )
             console.log(data);
             return data
@@ -119,9 +135,9 @@ export const getAllServices = createAsyncThunk(
     async () =>{
         try{
             const {data} = await instance.get(
-                "user/api/v1/get-services"
+                `user/api/v1/get-services`
             )
-            console.log(data);
+            console.log(data,'data from response');
             return data
         }catch(err){
             const axiosError = err as AxiosError

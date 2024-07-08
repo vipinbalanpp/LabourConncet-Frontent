@@ -54,7 +54,6 @@ const adminSlice = createSlice({
       .addCase(blockUser.fulfilled, (state, action) => {
         state.loading = false;
         toast.success(action.payload);
-        // state.users = action.payload
       })
       .addCase(blockUser.rejected, (state, action) => {
         state.loading = false;
@@ -67,7 +66,6 @@ const adminSlice = createSlice({
       .addCase(unBlockUser.fulfilled, (state, action) => {
         state.loading = false;
         toast.success(action.payload);
-        // state.users = action.payload
       })
       .addCase(unBlockUser.rejected, (state, action) => {
         state.loading = false;
@@ -79,11 +77,6 @@ const adminSlice = createSlice({
       })
       .addCase(getAllWorkers.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(
-          action.payload,
-          "--------------------> workers from admin slice"
-        );
-
         state.workers = action.payload;
       })
       .addCase(getAllWorkers.rejected, (state, action) => {
@@ -121,9 +114,7 @@ const adminSlice = createSlice({
       .addCase(getAllServices.fulfilled, (state, action) => {
         state.loading = false;
         state.services = action.payload;
-        console.log(action.payload,'sdlfjkloisdjos');
-      
-        toast.success(action.payload);
+        console.log(action);
       })
       .addCase(getAllServices.rejected, (state, action) => {
         state.loading = false;

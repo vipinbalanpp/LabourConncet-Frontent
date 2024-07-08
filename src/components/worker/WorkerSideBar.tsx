@@ -1,35 +1,164 @@
-import { useDispatch } from "react-redux";
+import {
+  faBell,
+  faChartBar,
+  faEnvelope,
+  faHardHat,
+  faQuestionCircle,
+  faSignOutAlt,
+} from "@fortawesome/free-solid-svg-icons";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
 import { logout } from "../../redux/reducers/user/UserSlice";
-import Logo from "../public/Logo"
-import { AppDispatch } from "../../redux/store";
-import { useState } from "react";
+import Logo from "../public/Logo";
+import { useEffect } from "react";
+import { fetchUserData } from "../../redux/actions/userActions";
 
+const WorkerSidebar = () => {
+  const navigate = useNavigate();
+  const user = useSelector((state: RootState) => state.user.user);
+  const dispatch = useDispatch<AppDispatch>();
 
-const WorkerSideBar = () => {
-    const [activeLink, setActiveLink] = useState("Dashboard");
-    const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    dispatch(fetchUserData());
+  }, [dispatch]);
 
-    const handleLogout = () => {
-        dispatch(logout())
-    };
-    return (
-        <div className="h-screen w-64 bg-gray-800 text-white">
-        <div className="p-4">
-        <Logo color={"white"}/>
-            <hr className="my-4" />
-            <ul>
-                <li className={`py-8 px-4 cursor-pointer ${activeLink === "Dashboard" ? "bg-gray-900" : ""}`} onClick={() => setActiveLink("Dashboard")}>Dashboard</li>
-                <li className={`py-8 px-4 cursor-pointer ${activeLink === "Personal Info" ? "bg-gray-900" : ""}`} onClick={() => setActiveLink("Personal Info")}>Personal Info</li>
-                <li className={`py-8 px-4 cursor-pointer ${activeLink === "My Bookings" ? "bg-gray-900" : ""}`} onClick={() => setActiveLink("My Bookings")}>My Bookings</li>
-                <li className={`py-8 px-4 cursor-pointer ${activeLink === "Notifications" ? "bg-gray-900" : ""}`} onClick={() => setActiveLink("Notifications")}>Notifications</li>
-                <li className={`py-8 px-4 cursor-pointer ${activeLink === "Messages" ? "bg-gray-900" : ""}`} onClick={() => setActiveLink("Messages")}>Messages</li>
-                <li className={`py-8 px-4 cursor-pointer ${activeLink === "Reviews and Ratings" ? "bg-gray-900" : ""}`} onClick={() => setActiveLink("Reviews and Ratings")}>Reviews and Ratings</li>
-                <li className={`py-8 px-4 cursor-pointer ${activeLink === "Help" ? "bg-gray-900" : ""}`} onClick={() => setActiveLink("Help")}>Help</li>
-                <li className="py-8 px-4 cursor-pointer" onClick={handleLogout}>Logout</li>
-            </ul>
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login"); 
+  };
+
+  return (
+    <div className="flex gap-x-10 h-screen">
+      <div className="w-1/5 sticky top-10 2xl:pb-10 scrollbar-hidden block h-screen scroll-smooth overflow-auto bg-gray-100 shadow-lg ">
+        <Logo color="black" />
+        <div className="flex flex-col items-center mt-8">
+          <div className="w-24 h-24 overflow-hidden rounded-full border-4 border-yellow-500">
+            <img
+              src={user?.profileImageUrl}
+              alt="Profile"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="mt-4 text-center">
+            <p className="text-xl font-semibold text-gray-800">
+              {user?.fullName}
+            </p>
+            <p className="text-gray-600">{user?.email}</p>
+          </div>
         </div>
+        <div className="px-5">
+          <nav className="flex-grow mt-10">
+            <ul className="space-y-4">
+              <li>
+                <NavLink
+                  to="/worker/dashboard"
+                  className={({ isActive }) =>
+                    `flex items-center p-4 rounded-xl transition-all duration-300 ${
+                      isActive
+                        ? "bg-yellow-500 text-white"
+                        : "duration-300 hover:translate-x-3 bg-white text-gray-800"
+                    }`
+                  }
+                >
+                  <FontAwesomeIcon icon={faChartBar} className="mr-2" />
+                  Dashboard
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/worker/profile"
+                  className={({ isActive }) =>
+                    `flex items-center p-4 rounded-xl transition-all duration-300 ${
+                      isActive
+                        ? "bg-yellow-500 text-white"
+                        : "duration-300 hover:translate-x-3 bg-white text-gray-800"
+                    }`
+                  }
+                >
+                  <FontAwesomeIcon icon={faChartBar} className="mr-2" />
+                  Personal Info
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/worker/bookings"
+                  className={({ isActive }) =>
+                    `flex items-center p-4 rounded-xl transition-all duration-300 ${
+                      isActive
+                        ? "bg-yellow-500 text-white"
+                        : "duration-300 hover:translate-x-3 bg-white text-gray-800"
+                    }`
+                  }
+                >
+                  <FontAwesomeIcon icon={faHardHat} className="mr-2" />
+                  My Bookings
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/worker/notifications"
+                  className={({ isActive }) =>
+                    `flex items-center p-4 rounded-xl transition-all duration-300 ${
+                      isActive
+                        ? "bg-yellow-500 text-white"
+                        : "duration-300 hover:translate-x-3 bg-white text-gray-800"
+                    }`
+                  }
+                >
+                  <FontAwesomeIcon icon={faBell} className="mr-2" />
+                  Notifications
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/worker/messages"
+                  className={({ isActive }) =>
+                    `flex items-center p-4 rounded-xl transition-all duration-300 ${
+                      isActive
+                        ? "bg-yellow-500 text-white"
+                        : "duration-300 hover:translate-x-3 bg-white text-gray-800"
+                    }`
+                  }
+                >
+                  <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
+                  Messages
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/worker/help"
+                  className={({ isActive }) =>
+                    `flex items-center p-4 rounded-xl transition-all duration-300 ${
+                      isActive
+                        ? "bg-yellow-500 text-white"
+                        : "duration-300 hover:translate-x-3 bg-white text-gray-800"
+                    }`
+                  }
+                >
+                  <FontAwesomeIcon icon={faQuestionCircle} className="mr-2" />
+                  Help Center
+                </NavLink>
+              </li>
+              <li>
+                <div
+                  className="flex items-center bg-white  hover:translate-x-3 p-4 rounded-xl cursor-pointer transition-all duration-300  text-gray-800"
+                  onClick={handleLogout}
+                >
+                  <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" />
+                  Logout
+                </div>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <div className="w-4/5">
+        <Outlet />
+      </div>
     </div>
-    )
-}
+  );
+};
 
-export default WorkerSideBar
+export default WorkerSidebar;

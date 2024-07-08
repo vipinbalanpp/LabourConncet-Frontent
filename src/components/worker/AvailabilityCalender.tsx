@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styled from 'styled-components';
@@ -6,16 +6,19 @@ import styled from 'styled-components';
 const StyledDatePicker = styled(DatePicker)`
   .react-datepicker__day--disabled {
     color: red;
-    background-color: #f0e5e5;
+    background-color: #f542e9;
   }
 `;
 
 interface WorkerAvailabilityCalendarProps {
-  bookedDates: string[];
+  bookedDates: Date[];
+  startDate: Date | null;
+  setStartDate: (date: Date | null) => void;
 }
 
-const AvailabilityCalender: React.FC<WorkerAvailabilityCalendarProps> = ({ bookedDates }) => {
-  const [startDate, setStartDate] = useState<Date | null>(null);
+const AvailabilityCalendar: React.FC<WorkerAvailabilityCalendarProps> = ({ bookedDates, startDate, setStartDate }) => {
+  const today = new Date();
+  const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
 
   const isBooked = (date: Date) => {
     return bookedDates.some(
@@ -29,9 +32,10 @@ const AvailabilityCalender: React.FC<WorkerAvailabilityCalendarProps> = ({ booke
       onChange={(date: Date | null) => setStartDate(date)}
       inline
       dayClassName={(date: Date) => (isBooked(date) ? 'react-datepicker__day--disabled' : null)}
-      excludeDates={bookedDates.map((date) => new Date(date))}
+      excludeDates={bookedDates}
+      minDate={tomorrow}
     />
   );
 };
 
-export default AvailabilityCalender;
+export default AvailabilityCalendar;

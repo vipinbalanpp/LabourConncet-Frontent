@@ -6,8 +6,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { Button, IconButton } from "@mui/material";
-import BlockIcon from "@mui/icons-material/Block";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux/store";
 import Modal from "react-modal";
@@ -54,56 +53,57 @@ const WorkerListTable: React.FC<WorkerListTableProps> = ({ workers }) => {
   }
   return (
     <>
-    <TableContainer className="mt-5">
+    <TableContainer className="mt-5 rounded-xl">
       <Table aria-label="customized table">
         <TableHead>
           <TableRow>
-            <TableCell sx={{ backgroundColor: "black", color: "white" }}>
+            <TableCell sx={{ backgroundColor: "rgb(234,179,8)", color: "white" }}>
+              Profile Image
+            </TableCell>
+            <TableCell sx={{ backgroundColor: "rgb(234,179,8)", color: "white" }}>
               Name
             </TableCell>
             <TableCell
-              sx={{ backgroundColor: "black", color: "white" }}
-              align="right"
+              sx={{ backgroundColor: "rgb(234,179,8)", color: "white" }}
+        
             >
               Email
             </TableCell>
             <TableCell
-              sx={{ backgroundColor: "black", color: "white" }}
-              align="right"
+              sx={{ backgroundColor: "rgb(234,179,8)", color: "white" }}
+          
             >
               Status
             </TableCell>
             <TableCell
-              sx={{ backgroundColor: "black", color: "white" }}
-              align="right"
-            >
+              sx={{ backgroundColor: "rgb(234,179,8)", color: "white" }}
+            
+            >Action
             </TableCell>
             <TableCell
-              sx={{ backgroundColor: "black", color: "white" }}
-              align="right"
-            >
-            </TableCell>
-            <TableCell
-              sx={{ backgroundColor: "black", color: "white" }}
-              align="right"
+              sx={{ backgroundColor: "rgb(234,179,8)", color: "white" }}
+        
             >
               Registration Date
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {workers.map((worker, index) => (
+          {workers.map((worker) => (
             <TableRow 
               key={worker.email}
-              className={index % 2 ? "bg-gray-100" : ""}
+            
             >
+                <TableCell component="th" scope="row" className="text-base">
+                  <img className="w-11 rounded-full h-11" src={worker.profileImageUrl} alt={worker.fullName} />
+                </TableCell>
               <TableCell component="th" scope="row" className="text-base hover:text-blue-500 cursor-pointer hover:underline" onClick={() => handleClickOnName(worker)}>
                 {worker.fullName}
               </TableCell>
-              <TableCell align="right" className="text-base">
+              <TableCell  className="text-base">
                 {worker.email}
               </TableCell>
-              <TableCell align="right" className="text-base">
+              <TableCell  className="text-base">
   <span className={worker.blocked ? "text-red-500" : "text-green-500"}>
     {worker.blocked ? "Blocked" : "Active"}
   </span>
@@ -111,26 +111,23 @@ const WorkerListTable: React.FC<WorkerListTableProps> = ({ workers }) => {
 
               <TableCell>
                 {!worker.blocked && (
-                  <IconButton
+                  <button
                   onClick={() => handleOpenBlockModal(worker.email)}
+                  className="text-red-500"
                   >
-                    <CheckCircleIcon color="primary" />
-                  </IconButton>
+                     block
+                  </button>
                 )}
                 {worker.blocked && (
-                  <IconButton
+                  <button
                   onClick={() => handleOpenUnBlockModal(worker.email)}
+                  className="text-green"
                   >
-                    <BlockIcon color="secondary" />
-                  </IconButton>
+                   unBlock
+                  </button>
                 )}
               </TableCell>
-              <TableCell align="right" className="text-base">
-              <span className={worker.verified ? "text-red-500" : "text-green-500"}>
-              {worker.verified ? "Not Verified" : "Verified"}  </span>
-
-              </TableCell>
-              <TableCell align="right" className="text-base">
+              <TableCell  className="text-white">
                 {new Date(worker.createdAt).toLocaleString()}
               </TableCell>
             </TableRow>
@@ -196,7 +193,7 @@ const WorkerListTable: React.FC<WorkerListTableProps> = ({ workers }) => {
       <div className="space-y-4 flex-1">
         <p className="text-gray-700"><span className="font-semibold">Name:</span> {selectedWorker?.fullName}</p>
         <p className="text-gray-700"><span className="font-semibold">Email:</span> {selectedWorker?.email}</p>
-        <p className="text-gray-700"><span className="font-semibold">Expertise In:</span> {selectedWorker?.expertiseIn}</p>
+        <p className="text-gray-700"><span className="font-semibold">Expertise In:</span> {selectedWorker?.service.serviceName}</p>
         <p className="text-gray-700"><span className="font-semibold">Mobile Number:</span> {selectedWorker?.mobileNumber}</p>
         <p className="text-gray-700"><span className="font-semibold">Experience:</span> {selectedWorker?.experience} years</p>
         <p className="text-gray-700"><span className="font-semibold">Service Charge:</span> ₹ {selectedWorker?.serviceCharge}/hour</p>

@@ -36,22 +36,22 @@ const Navbar = () => {
   return (
     <>
       <div>
-        <div className="flex justify-between">
+        <div className="flex justify-between ">
           <Logo color="black"/>
-          <div className="flex py-5 gap-x-8 pe-[100px] text-black font-semibold">
+          <div className="flex py-5 gap-x-8  pe-[100px] text-black font-semibold">
             <NavLink
               to={"/"}
               className={({ isActive }) => {
                 return `hover:text-blue-600 cursor-pointer hover:scale-95 duration-300 ${
                   isActive
                     ? "border-b-4 border-yellow-400 duration-500 transition-all"
-                    : ""
+                    : " nav-hover"
                 }`;
               }}
             >
               Home
             </NavLink>
-            <NavLink
+            {/* <NavLink
               to={"/service-list"}
               className={({ isActive }) => {
                 return `hover:text-blue-600 cursor-pointer hover:scale-95 duration-300 ${
@@ -62,14 +62,14 @@ const Navbar = () => {
               }}
             >
               Services
-            </NavLink>
+            </NavLink> */}
             <NavLink
               to={"/workers-list"}
               className={({ isActive }) => {
                 return `hover:text-blue-600 cursor-pointer hover:scale-95 duration-300 ${
                   isActive
                     ? "border-b-4 border-yellow-400 duration-500 transition-all"
-                    : ""
+                    : "nav-hover"
                 }`;
               }}
             >
@@ -82,7 +82,7 @@ const Navbar = () => {
                 return `hover:text-blue-600 cursor-pointer hover:scale-95 duration-300 ${
                   isActive
                     ? "border-b-4 border-yellow-400 duration-500 transition-all"
-                    : ""
+                    : "nav-hover"
                 }`;
               }}
             >
@@ -96,7 +96,7 @@ const Navbar = () => {
                return `hover:text-blue-600 cursor-pointer hover:scale-95 duration-300 ${
                  isActive
                    ? "border-b-4 border-yellow-400 duration-500 transition-all"
-                   : ""
+                   : "nav-hover"
                }`;
              }}
            >
@@ -109,7 +109,7 @@ const Navbar = () => {
                 return `hover:text-blue-600 cursor-pointer hover:scale-95 duration-300 ${
                   isActive
                     ? "border-b-4 border-yellow-400 duration-500 transition-all"
-                    : ""
+                    : "nav-hover"
                 }`;
               }}
             >
@@ -122,7 +122,7 @@ const Navbar = () => {
                   return `hover:text-blue-600 cursor-pointer hover:scale-95 duration-300 ${
                     isActive
                       ? "border-b-4 border-yellow-400 duration-500 transition-all"
-                      : ""
+                      : "nav-hover"
                   }`;
                 }}
               >
@@ -132,7 +132,7 @@ const Navbar = () => {
             {user && (
               <div className="relative">
                 <div
-                  className="flex ms-5 border items-center justify-center cursor-pointer"
+                  className="flex ms-5 rounded-full border-yellow-400 items-center justify-center cursor-pointer"
                   onClick={handleProfileClick}
                 >
                   {user.profileImageUrl ? (

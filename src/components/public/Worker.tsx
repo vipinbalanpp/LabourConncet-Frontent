@@ -1,27 +1,32 @@
-import image from "../../assets/user.png";
-import service from "../../assets/plumbing.jpg";
+
 import { FaStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { IWorkerDetailsForStore } from "../../interfaces/worker";
 
-const Worker = () => {
+type workerType={
+  worker:IWorkerDetailsForStore
+}
+const Worker = ( {worker} :workerType) => {
   const navigate = useNavigate();
+  console.log(worker);
+  
   return (
     <>
       <div className=" w-[320px] h-[200px]  mt-3 border border-1 shadow-md duration-300 hover:scale-110 hover:shadow-4xl cursor-pointer"
-      onClick={()=> navigate('/worker-details')}
+      onClick={()=> navigate(`/worker-details/${worker.email}`)}
       >
         <div className="flex  ">
-          <img className="w-14 m-5  h-14 rounded-full" src={image} />
+          <img className="w-14 m-5  h-14 rounded-full" src={worker?.profileImageUrl} />
           <div className="">
             <h2 className=" text-black  pt-5  font-semibold">
-              Vipin Balan
+             {worker?.fullName}
             </h2>
             <p className=" text-[rgb(156,155,155)] mt-[-18px] text-sm pt-5  font-semibold">
-              Plumber
+              {worker?.service.serviceName}
             </p>
             <p className=" text-yellow-600 mt-[-18px] text-xs pt-5  font-semibold">View Profile</p>
           </div>
-          <img className="w-14 h-14 ms-12 mt-5" src={service} />
+          <img className="w-14 h-14 ms-12 mt-5" src={worker?.service.logo} />
         </div>
         <div className="flex justify-between ps-5 pt-10">
           <div>

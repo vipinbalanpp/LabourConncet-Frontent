@@ -1,12 +1,11 @@
 import { FaFacebook, FaInstagram } from "react-icons/fa";
-import image from "../../assets/Screenshot__161_-removebg-preview.png";
 import { TiSocialTwitterCircular } from "react-icons/ti";
 import { ImLinkedin } from "react-icons/im";
 import Logo from "./Logo";
 
 const Footer = () => {
   return (
-    <div className="h-[400px] bg-black mt-10">
+    <div className="h-[400px] bg-black ">
       <div className="flex gap-4 justify-between">
         <div>
           <div className="flex pt-10 ps-14">

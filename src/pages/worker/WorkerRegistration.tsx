@@ -1,4 +1,4 @@
-import { Formik, Form } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import TextArea from "../../components/form/TextArea";
 import RadioButton from "../../components/form/RadioButton";
@@ -8,8 +8,8 @@ import Logo from "../../components/public/Logo";
 import InputWithIcon from "../../components/form/InputWithIcon";
 import PasswordInputWithIcon from "../../components/form/PasswordInput";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
 import axios from "axios";
 import { IWorkerCredentials } from "../../interfaces/worker";
 import { workerSignUp } from "../../redux/actions/workerActions";
@@ -18,6 +18,7 @@ import { workerSignUp } from "../../redux/actions/workerActions";
 const WorkerRegistration = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const services = useSelector((state:RootState) => state.admin.services)
 
   const initialValues = {
     fullname: "",
@@ -107,8 +108,10 @@ const WorkerRegistration = () => {
   };
 
   return (
-    <div className="h-full">
-      <div className="absolute top-0 left-0">
+    <div className="h-full overflow-y-auto " 
+  
+    >
+      <div className="top-0 left-0">
         <Logo color="black" />
       </div>
       <h2 className="text-2xl font-bold pt-20 pb-10 mb-6 text-center">
@@ -180,27 +183,43 @@ const WorkerRegistration = () => {
                     { label: "Other", value: "other" },
                   ]}
                 />
+              <div className="flex flex-col ">
+  <label htmlFor="expertiseIn" className="text-black">Expertise In</label>
+  <Field
+    as="select"
+    name="expertiseIn"
+    className="sign-up-input w-full bg-white text-black ps-2 border placeholder:text-sm border-yellow-300 h-10"
+  >
+    <option value="" disabled hidden>Select service</option>
+    {services.map((service) => (
+      <option key={service.serviceName} value={service.serviceName}>
+        {service.serviceName}
+      </option>
+    ))}
+  </Field>
+  <ErrorMessage
+    name="expertiseIn"
+    component="span"
+    className="text-sm text-red-500"
+  />
+</div>
+<div className="flex gap-20 mt-10">
+
                 <InputWithIcon
-                  title="Expertise In"
-                  name="expertiseIn"
-                  placeholder="Enter your expertise"
-                  type="text"
-                  icon=""
-                />
-                <InputWithIcon
-                  title="Experience"
+                  title="Experience in years"
                   name="experience"
                   placeholder="Enter your experience"
                   type="number"
                   icon=""
-                />
+                  />
                 <InputWithIcon
                   title="Service Charge"
                   name="serviceCharge"
                   placeholder="Enter your service charge"
                   type="number"
                   icon=""
-                />
+                  />
+                  </div>
               </div>
               <p className="font-semibold ps-[700px] text-2xl text-black">
                 Address
@@ -254,7 +273,7 @@ const WorkerRegistration = () => {
                   />
                 </div>
               </div>
-              <div className="px-24 pt-10">
+              <div className="pt-10 px-20">
                 <TextArea
                   title="About"
                   name="about"

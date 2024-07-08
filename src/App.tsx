@@ -12,8 +12,9 @@ import Navbar from "./components/public/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import WorkerListing from "./pages/user/WorkerListing";
 import { useEffect } from "react";
+import Bookings from "./pages/user/Bookings";
 import { AppDispatch, RootState } from "./redux/store";
-import { fetchUserData } from "./redux/actions/userActions";
+import { fetchUserData, getAllBookings } from "./redux/actions/userActions";
 import WorkerDashBoard from "./pages/worker/WorkerDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import UsersList from "./pages/admin/UsersList";
@@ -23,29 +24,43 @@ import ServiceList from "./pages/admin/ServiceList";
 import ServiceListing from "./pages/user/ServiceListing";
 import HomeRoute from "./components/worker/HomeRoute";
 import ProtectedRoute from "./components/public/ProtectedRoute";
-import WorkerListTable from "./components/admin/WorkerListTable";
 import WorkerDetails from "./pages/user/WorkerDetails";
 import Profile from "./pages/user/Profile";
+import WorkerProfile from "./pages/worker/WorkerProfile";
+import {
+  getAllServices,
+  getAllUsers,
+  getAllWorkers,
+} from "./redux/actions/adminActions";
+import MyBookings from "./pages/worker/MyBookings";
+import HelpCenter from "./pages/user/HelpCenter";
+import WHelpCenter from "./pages/worker/Help";
+import Messages from "./pages/worker/Messages";
+import Notifications from "./pages/worker/Notifications";
+import WorkerSidebar from "./components/worker/WorkerSideBar";
+import AdminSidebar from "./components/admin/AdminSidebar";
+import { getServers } from "dns";
+import Loading from "./components/public/Loading";
 
 function App() {
   const location = useLocation();
   const dispatch = useDispatch<AppDispatch>();
   const loading = useSelector((state: RootState) => state.user.loading);
-  const user = useSelector((state: RootState) => state.user.user);
-  
+
   useEffect(() => {
     dispatch(fetchUserData());
+    dispatch(getAllWorkers({pageNumber:0}));
+    dispatch(getAllServices())
+    dispatch(getAllBookings());
   }, []);
   const showNavbarAndFooter =
     location.pathname.startsWith("/user/") ||
     location.pathname === "/" ||
     location.pathname === "/find-worker";
   return (
-    <div className="bg-white">
+    <div className="bg-white h-screen">
       {loading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
-          <span className="loading absolute top-1/2 right-1/2  text-yellow-500 loading-spinner loading-lg"></span>
-        </div>
+        <Loading/>
       )}
 
       {showNavbarAndFooter && <Navbar />}
@@ -58,48 +73,106 @@ function App() {
         <Route path="/worker-register" element={<WorkerRegistration />} />
         <Route path="/workers-list" element={<WorkerListing />} />
         <Route path="/service-list" element={<ServiceListing />} />
-        <Route path="/worker-details" element={<WorkerDetails />} />
+        <Route path="/worker-details/:email" element={<WorkerDetails />} />
+        <Route 
+        path="admin"
+        element={<ProtectedRoute element={<AdminSidebar/>} requiredRole="ADMIN"/>}
+         >
         <Route
-          path="/worker/dashboard"
-          element={
-            <ProtectedRoute
-              element={<WorkerDashBoard />}
-              requiredRole="WORKER"
-            />
-          }
-        />
-        <Route
-          path="/admin/dashboard"
+          path="dashboard"
           element={
             <ProtectedRoute element={<AdminDashboard />} requiredRole="ADMIN" />
           }
         />
         <Route
-          path="/admin/users-list"
+          path="users-list"
           element={
             <ProtectedRoute element={<UsersList />} requiredRole="ADMIN" />
           }
         />
         <Route
-          path="/admin/workers-list"
+          path="workers-list"
           element={
             <ProtectedRoute element={<WorkersList />} requiredRole="ADMIN" />
           }
         />
         <Route
-          path="/admin/services-list"
+          path="services-list"
           element={
             <ProtectedRoute element={<ServiceList />} requiredRole="ADMIN" />
           }
         />
-         <Route
-          path="/profile"
+        </Route>
+        <Route
+          path="worker"
           element={
-            <ProtectedRoute element={<Profile />} requiredRole="USER" />
+            <ProtectedRoute element={<WorkerSidebar />} requiredRole="WORKER" />
+          }
+        >
+          <Route
+            path="dashboard"
+            element={
+              <ProtectedRoute
+                element={<WorkerDashBoard />}
+                requiredRole="WORKER"
+              />
+            }
+          />
+          <Route
+            path="profile"
+            element={
+              <ProtectedRoute
+                element={<WorkerProfile />}
+                requiredRole="WORKER"
+              />
+            }
+          />
+
+          <Route
+            path="bookings"
+            element={
+              <ProtectedRoute element={<MyBookings />} requiredRole="WORKER" />
+            }
+          />
+          <Route
+            path="messages"
+            element={
+              <ProtectedRoute element={<Messages />} requiredRole="WORKER" />
+            }
+          />
+          <Route
+            path="help"
+            element={
+              <ProtectedRoute element={<WHelpCenter />} requiredRole="WORKER" />
+            }
+          />
+          <Route
+            path="notifications"
+            element={
+              <ProtectedRoute
+                element={<Notifications />}
+                requiredRole="WORKER"
+              />
+            }
+          />
+        </Route>
+        <Route
+          path="/profile"
+          element={<ProtectedRoute element={<Profile />} requiredRole="USER" />}
+        />
+        <Route
+          path="/help-center"
+          element={
+            <ProtectedRoute element={<HelpCenter />} requiredRole="USER" />
+          }
+        />
+        <Route
+          path="/bookings"
+          element={
+            <ProtectedRoute element={<Bookings />} requiredRole="USER" />
           }
         />
       </Routes>
-
       {showNavbarAndFooter && <Footer />}
     </div>
   );

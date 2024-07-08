@@ -9,7 +9,8 @@ import Modal from "react-modal";
 import PasswordInputWithIcon from "../components/form/PasswordInput";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../redux/store";
-import { login } from "../redux/actions/userActions";
+import { fetchUserData, login } from "../redux/actions/userActions";
+import toast from "react-hot-toast";
 
 Modal.setAppElement("#root");
 
@@ -28,11 +29,16 @@ const Login = () => {
   
   const handleSubmit = (values: { email: string; password: string }) => {
     console.log(values,'on submit');
-    
      dispatch(login(values)).then(result=>{
       console.log(result,'from login page');
+      if(result?.error){
+        return;
+      }
       if(result.payload.data)
+        dispatch(fetchUserData())
         navigate('/')
+    }).catch(error=>{
+      toast.error(error)
     })
     
   };
@@ -93,7 +99,7 @@ const Login = () => {
                   type="submit"
                   className="w-full py-3 bg-yellow-400 text-white font-semibold rounded-lg hover:bg-yellow-500 "
                 >
-                  Continue
+                  Sign In
                 </button>
                 <button
                   onClick={handleGoogleLogin}

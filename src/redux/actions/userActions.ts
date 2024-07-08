@@ -85,4 +85,12 @@ export const login = createAsyncThunk(
             const axiosError = err as AxiosError
             console.log(axiosError);
        } })
-
+export const getAllBookings = createAsyncThunk(
+    'booking/getAllBookings',async () =>{
+        try{
+            const response = await instance.get('booking/api/v1',{withCredentials:true})
+            return response.data;
+        } catch(err){
+            const axiosError = err as AxiosError
+            console.log(axiosError);
+       } })

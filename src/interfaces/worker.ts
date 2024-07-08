@@ -1,3 +1,5 @@
+import { Iservice } from "./admin";
+
 export interface IWorkerCredentials {
   fullname: string;
   mobileNumber: string;
@@ -18,6 +20,7 @@ export interface IWorkerCredentials {
 }
 export interface IWorkerDetailsForStore {
   about: string;
+  id:string
 
   address: {
     houseName: string;
@@ -31,7 +34,7 @@ export interface IWorkerDetailsForStore {
 
   experience: string;
 
-  expertiseIn: string;
+  service: Iservice
 
   fullName: string;
 
@@ -55,4 +58,13 @@ export interface IWorkerDetailsForStore {
 }
 export interface WorkerListTableProps {
   workers: IWorkerDetailsForStore[];
+}
+export interface IEditWorkerDetails{
+  fullName: string
+  mobileNumber:string
+  dateOfBirth: string
+  expertiseIn: string
+  experience: string
+  serviceCharge: string
+  about: string
 }

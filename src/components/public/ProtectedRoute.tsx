@@ -1,7 +1,7 @@
 
 import { Navigate } from "react-router-dom";
-import {  RootState } from "../redux/store";
 import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 
 
@@ -9,7 +9,6 @@ const ProtectedRoute = ({ element, requiredRole }: { element: JSX.Element, requi
     const user = useSelector((state: RootState) => state.user.user);
     if(!user)return  <Navigate to="/login" />;
     const userRole = user.role
-    console.log(user);
     if (userRole !== requiredRole) {
       return <Navigate to="/login" />;
     }

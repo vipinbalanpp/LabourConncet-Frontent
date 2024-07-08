@@ -73,5 +73,18 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"),require("daisyui")],
+  plugins: [require("tailwindcss-animate"),require("daisyui"),
+    function ({ addUtilities }) {
+      addUtilities({
+        '.scrollbar-hide': {
+          /* Firefox */
+          'scrollbar-width': 'none',
+          /* Chrome, Edge, and Safari */
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
+        },
+      });
+    },
+  ],
 }
