@@ -1,6 +1,7 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { IBooking } from "../../interfaces/user"
 import AvailabilityCalender from "../worker/AvailabilityCalender"
+import instance from "../../config/axiozConfig"
 
 type BookingType = {
     booking:IBooking
@@ -8,7 +9,12 @@ type BookingType = {
 const BookingCard = ({booking}:BookingType) => {
     const [reScheduleModalIsOpen,setReScheduleModalIsOpen] = useState(false)
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-    const bookedDates = ["2024-06-28", "2024-07-02", "2024-07-05"];
+    const [bookedDates,setBookedDates] = useState<Date[] | null>(null)
+    useEffect(() => {
+           const fetchBookedDates = async () => {
+             const response = instance.get(`user/api/v1/workerDetails?id=${booking.worker}`)
+           }
+    },[]) 
     return (
         <>
         <div className="flex justify-between hover:border-none w-[1000px] mt-3 h-[150px]  border border-gray-300 p-5  hover:shadow-lg duration-300">
@@ -18,13 +24,12 @@ const BookingCard = ({booking}:BookingType) => {
             <p className="text-sm">{booking.worker.fullName}</p>
             <p className="text-sm">{booking.worker.service.serviceName}</p>
             <p className="text-sm">
-  Date: {new Date(booking?.bookingDate).toLocaleDateString()}
+  Date: {new Date(booking?.workDate).toLocaleDateString()}
 </p>
             <p className="text-sm mt-2">{booking.status} </p>
            </div>
            </div>
            <div>
-                {/* <button className="border border-1 mt-3 cursor-pointer  text-yellow-400 text-sm px-2 py-1">View Details</button> */}
                 <button className="border border-1 mt-3 cursor-pointer  text-yellow-400 text-sm px-2 py-1 ms-3">Message</button>
                 <div>
                 <button onClick={() => setReScheduleModalIsOpen(true)} className="border border-1 mt-3 cursor-pointer   text-yellow-400 text-sm px-2 py-1 ms-3">Reschedule</button>

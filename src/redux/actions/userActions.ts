@@ -8,7 +8,7 @@ import { handleError } from "../../config/errorConfig";
 
 export const userSignUp = createAsyncThunk(
     "user/userSignUp",
-    async (userCredentials:IUserCredentials,{rejectWithValue}) =>{
+    async (userCredentials:IUserCredentials,{}) =>{
         try{
             const {data} = await instance.post(
                 `auth/api/v1/user/register`,
@@ -46,7 +46,7 @@ type dataType ={
 }
 export const verifyOtp = createAsyncThunk(
     "verifyOtp",
-        async (data:dataType,{rejectWithValue}) =>{
+        async (data:dataType,{}) =>{
         try{
             const response = await instance.post(
                 `notification/api/v1/verify-otp?email=${data.email}&otp=${data.otp}`

@@ -4,7 +4,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { FaEdit, FaPlus, FaSort } from "react-icons/fa";
+import { FaEdit, FaPlus } from "react-icons/fa";
 
 import instance from "../../config/axiozConfig";
 import { Iservice } from "../../interfaces/admin";
@@ -13,12 +13,11 @@ import { Box } from "@mui/material";
 import Modal from "react-modal";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../redux/store";
-import { getAllServices } from "../../redux/actions/adminActions";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../redux/store";
+
 
 const ServicesTable = () => {
-  let servicesFromStore = useSelector((state:RootState) => state.admin.services)
   const dispatch = useDispatch<AppDispatch>()
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -26,7 +25,7 @@ const ServicesTable = () => {
   const [serviceName, setServiceName] = useState("");
   const [description, setDescription] = useState("");
   const [addServiceError,setAddServiceError]= useState('')
-  const [services,setServices] = useState<Iservice[]>(servicesFromStore)
+  const [services,setServices] = useState<Iservice[]>([])
   const [serviceToBeEdited,setServiceToBeEdited] = useState<Iservice | null>(null)
 
   useEffect(() => {  
@@ -68,7 +67,6 @@ const ServicesTable = () => {
         } 
           try{
             await instance.post("/user/api/v1/create-service",serviceCredentials)
-            dispatch(getAllServices())
             toast.success('Service created successfully')
             setImage(null)
             setServiceName('')
@@ -98,7 +96,6 @@ const ServicesTable = () => {
                  serviceDataForEditing.logo = imageResponse.data.secure_url
             }
             await instance.put(`/user/api/v1/edit-service?serviceName=${serviceToBeEdited?.serviceName}`,serviceDataForEditing)
-            dispatch(getAllServices())
             toast.success('Service edited successfully')
             setImage(null)
             setServiceName('')
@@ -121,11 +118,12 @@ const ServicesTable = () => {
           >
            <FaPlus className="text-sm mt-2" />
           </button>
-            <input onChange={(e) =>setServices(servicesFromStore.filter(service=>service.serviceName.toLocaleLowerCase().startsWith(e.target.value.toLocaleLowerCase())))} className="bg-white border border-black me-1" type="text" />
+            <input onChange={(e) =>{}} className="bg-white border border-black me-1" type="text" />
             <button className="bg-[rgb(234,179,8)] px-2 me-4 py-1 text-white rounded-[7px]">Search</button>
           </div>
         </div>
-        <TableContainer className="w-full rounded-xl mt-4">
+       <div className="me-5">
+       <TableContainer className="w-full rounded-xl mt-4">
           <Table aria-label="customized table">
             <TableHead >
             <TableRow sx={{ borderRadius: "5px" }}>
@@ -149,7 +147,7 @@ const ServicesTable = () => {
             </TableHead>
             <TableBody>
               {services?.map((service) => (
-                <TableRow key={service.serviceName} className="bg-gray-100">
+                <TableRow key={service.serviceName} className="bg-white">
                     <TableCell component="th" scope="row" className="text-base">
                     <img className="w-11 rounded-full h-11" src={service.logo} alt="" />
                   </TableCell>
@@ -170,6 +168,7 @@ const ServicesTable = () => {
             </TableBody>
           </Table>
         </TableContainer>
+       </div>
       </div>
       {isModalOpen && (
         <Modal

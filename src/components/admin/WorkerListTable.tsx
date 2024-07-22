@@ -6,17 +6,12 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { Button, IconButton } from "@mui/material";
-
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../redux/store";
 import Modal from "react-modal";
 import { IWorkerDetailsForStore, WorkerListTableProps } from "../../interfaces/worker";
-import { blockWorker, unBlockWorker } from "../../redux/actions/adminActions";
 
 
 
 const WorkerListTable: React.FC<WorkerListTableProps> = ({ workers }) => {
-  const dispatch = useDispatch<AppDispatch>();
   const [blockModalIsOpen, setBlockModalIsOpen] = useState(false);
   const [unBlockModalIsOpen, setUnBlockModalIsOpen] = useState(false);
   const [selectedWorkerEmail, setSelectedWorkerEmail] = useState("");
@@ -24,21 +19,6 @@ const WorkerListTable: React.FC<WorkerListTableProps> = ({ workers }) => {
   const [userDetailsModalIsOpen,setUserDetailsModalIsOpen] = useState(false)
   useEffect(()=>{
   },[workers])
-  const handleBlock = ()=>{
-      dispatch(blockWorker(selectedWorkerEmail))
-     workers = workers.map(Worker =>        
-        Worker.email === selectedWorkerEmail ? { ...Worker, blocked: true } : Worker
-      );       
-      setBlockModalIsOpen(false)
-      }
-
-  const handleUnBlock =()=>{
-    dispatch(unBlockWorker(selectedWorkerEmail))
-    workers = workers.map(Worker =>
-      Worker.email === selectedWorkerEmail ? { ...Worker, blocked: false } : Worker
-    ); 
-    setUnBlockModalIsOpen(false)
-  }
   const handleOpenBlockModal = (email:string) => {
     setSelectedWorkerEmail(email);
     setBlockModalIsOpen(true);
@@ -146,7 +126,7 @@ const WorkerListTable: React.FC<WorkerListTableProps> = ({ workers }) => {
        <p className="mb-4 text-black">Are you sure you want to block this Worker?</p>
        <div className="flex justify-end mt-4 space-x-2">
          <Button className="bg-gray-500 text-white rounded px-4 py-2" onClick={() => setBlockModalIsOpen(false)}>Cancel</Button>
-         <Button  className="bg-blue-500 text-white rounded px-4 py-2" onClick={handleBlock}>Confirm</Button>
+         <Button  className="bg-blue-500 text-white rounded px-4 py-2" >Confirm</Button>
        </div>
      </div>
    </Modal>
@@ -161,7 +141,7 @@ const WorkerListTable: React.FC<WorkerListTableProps> = ({ workers }) => {
        <p className="mb-4 text-black">Are you sure you want to block this Worker?</p>
        <div className="flex justify-end mt-4 space-x-2">
          <Button className="bg-gray-500 text-white rounded px-4 py-2" onClick={() => setUnBlockModalIsOpen(false)}>Cancel</Button>
-         <Button  className="bg-blue-500 text-white rounded px-4 py-2" onClick={handleUnBlock}>Confirm</Button>
+         <Button  className="bg-blue-500 text-white rounded px-4 py-2">Confirm</Button>
        </div>
      </div>
    </Modal>

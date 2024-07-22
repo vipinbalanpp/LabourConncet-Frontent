@@ -1,18 +1,37 @@
 import { useDispatch, useSelector } from "react-redux"
 import BookingCard from "../../components/public/BookingCard"
 import { AppDispatch, RootState } from "../../redux/store"
-import { useEffect } from "react"
-import { getAllBookings } from "../../redux/actions/userActions"
+import { useEffect, useState } from "react"
+import { IBooking } from "../../interfaces/user"
+import instance from "../../config/axiozConfig"
+import Pagination from "../../components/public/Pagination"
+
 
 
 const MyBookings = () => {
-    const bookings = useSelector((state:RootState) => state.user.bookings)
-    const worker = useSelector((state:RootState) => state.user.user)
-    const dispatch = useDispatch<AppDispatch>()
-    const myBookings = bookings.filter((booking) => booking.worker.email === worker?.email)
+    const worker = useSelector((state:RootState) => state.user)
+    const[bookings,setBookings] = useState<IBooking[]>([])
+    const[currentPage,setCurrentPage] = useState(1);
+    const [totalNumberOfPages,setTotalNumberOfPages] = useState(0)
     useEffect(() => {
-        dispatch(getAllBookings())
-    },[])
+        fetchBookings();
+    },[currentPage])
+
+    const fetchBookings = async() => {
+        try{
+         const response = await instance.get(`/booking/api/v1?workerId=${worker?.id}&pageNumber=${currentPage-1}`)
+         if(response){
+             setBookings(response.data.bookings)
+             console.log(response.data,'this is the bookings I wnat');
+             
+             setTotalNumberOfPages(response.data.totalNumberOfPages)
+         }
+        }catch(error){
+         
+        }
+         
+     }
+
     return (
         <div>
             <div className="pt-20">
@@ -23,11 +42,16 @@ const MyBookings = () => {
                     <button className="border border-1 px-2 py-1 font-semibold text-sm rounded-[7px]">Cancelled</button>
                     <button className="border border-1 px-2 py-1 font-semibold text-sm rounded-[7px]">Requested</button>
                </div>
-               {myBookings.map((booking)=> (
+               {bookings.length >0  && bookings.map((booking:IBooking)=> (
                 <BookingCard booking={booking} />
                ))}
+
             </div>
-        </div>
+<div className="pt-5">
+<Pagination currentPage={currentPage} totalPages={totalNumberOfPages} onPageChange={setCurrentPage} />
+
+    </div>
+            </div>
     )
 }
 

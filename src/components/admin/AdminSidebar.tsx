@@ -27,8 +27,8 @@ const AdminSidebar = () => {
   };
 
   return (
-    <div className="flex gap-x-10 h-screen">
-      <div className="w-1/5 sticky top-10 2xl:pb-10 scrollbar-hidden block h-screen scroll-smooth overflow-auto bg-gray-100 shadow-lg">
+    <div className="flex gap-x-10 min-h-screen bg-white">
+      <div className="w-1/5 sticky  2xl:pb-10 scrollbar-hidden block h-screen scroll-smooth overflow-auto bg-gray-100 shadow-lg">
         <Logo color="black" />
         <div className="px-5">
           <nav className="flex-grow mt-10">
@@ -98,7 +98,7 @@ const AdminSidebar = () => {
           </nav>
         </div>
       </div>
-      <div className="w-4/5">
+      <div className="w-4/5 ">
         <Outlet />
       </div>
     </div>

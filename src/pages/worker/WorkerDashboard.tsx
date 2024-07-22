@@ -1,4 +1,3 @@
-import WorkerSideBar from "../../components/worker/WorkerSideBar";
 
 const WorkerDashboard = () => {
   return (

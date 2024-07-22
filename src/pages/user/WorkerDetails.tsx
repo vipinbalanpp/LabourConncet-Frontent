@@ -1,13 +1,10 @@
-import { FaMobileAlt, FaStar } from "react-icons/fa";
+import { FaAddressBook, FaMobileAlt, FaStar } from "react-icons/fa";
 import { CiMail } from "react-icons/ci";
-import Footer from "../../components/public/Footer";
-import Navbar from "../../components/public/Navbar";
-import Work from "../../components/worker/Work";
 import Testimonial from "../../components/public/Testimonial";
 import ReactModal from "react-modal";
 import { useEffect, useState } from "react";
 import { Button } from "@mui/base";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { IWorkerDetailsForStore } from "../../interfaces/worker";
@@ -15,18 +12,20 @@ import AvailabilityCalender from "../../components/worker/AvailabilityCalender";
 import toast from "react-hot-toast";
 import { IAddress } from "../../interfaces/user";
 import instance from "../../config/axiozConfig";
+import Work from "../../components/worker/Work";
 
 const WorkerDetails = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const workers = useSelector((state: RootState) => state.admin.workers);
-  const user = useSelector((state:RootState) => state.user.user)
+  const user = useSelector((state:RootState) => state.user)
   const [worker, setWorker] = useState<IWorkerDetailsForStore | undefined>();
   const { email } = useParams();
   const [addressError, setAddressError] = useState<string | null>(null);
   const [workDescription, setWorkDescription] = useState<string | null>(null);
+  const [dateSelectionError,setDateSelectionError] = useState<string | null>(null);
   const [workDescriptionError, setWorkDescriptionError] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [bookedDates,setBookedDates] = useState<Date[]>([])
+  const navigate = useNavigate()
   const [unavailableDates,setUnavailableDates] = useState<Date[]>([])
   const [addressFormData, setAddressFormData] = useState<IAddress | any>({
     houseName:  null,
@@ -36,36 +35,42 @@ const WorkerDetails = () => {
     pincode: null,
   });
   useEffect(() => {
-    const foundWorker = workers.find((worker) => worker.email === email);
-    setWorker(foundWorker);
-    const fetchAvailabilityDates = async () => {
+    const fetchWorkerDetails = async () => {
       try {
-        const response = await instance.get(
-          `booking/api/v1/get-availability-dates?workerId=${user?.id}`
-        );
-        setBookedDates(
-          response.data.bookedDates.map(
-            (dateString: string) => new Date(dateString)
-          )
-        );
-        if (response.data.unavailableDates) {
-          setUnavailableDates(
-            response.data.unavailableDates.map(
-              (dateString: string) => new Date(dateString)
-            )
-          );
+        if (email) {
+          const workerResponse = await instance.get(`/user/api/v1/workerDetails?email=${email}`);
+          const workerData = workerResponse.data;
+          setWorker(workerData);
+          if (workerData.id) {
+            const response = await instance.get(
+              `booking/api/v1/get-availability-dates?workerId=${workerData.id}`
+            );
+            setBookedDates(
+              response.data.bookedDates.map(
+                (dateString: string) => new Date(dateString)
+              )
+            );
+  
+            if (response.data.unavailableDates) {
+              setUnavailableDates(
+                response.data.unavailableDates.map(
+                  (dateString: string) => new Date(dateString)
+                )
+              );
+            }
+          }
         }
-        console.log(response);
       } catch (error) {
-        console.error("Error fetching availability dates:", error);
+        console.error("Error fetching worker details or availability dates:", error);
       }
     };
-     fetchAvailabilityDates();
-  }, [email, workers]);
+    fetchWorkerDetails();
+  }, [email]);
+  
 
   const handleBookingButtonClicked = () =>{
     if(!user) {
-      toast.error("Please login to continue")
+        navigate('/login')
       return
     }
     setModalIsOpen(true)
@@ -107,6 +112,8 @@ const WorkerDetails = () => {
   };
   
   const handleBooking = () => {
+    console.log(selectedDate,'date of booking');
+    
     if (!workDescription) {
       setWorkDescriptionError("Enter a valid description of work");
       return;
@@ -119,6 +126,9 @@ const WorkerDetails = () => {
     ) {
       setAddressError("Complete the address fields");
       return;
+    }else if(selectedDate === null){
+      setDateSelectionError("Please select booking date");
+      return;
     }
       const formData = {
         workAddress: addressFormData,
@@ -129,14 +139,14 @@ const WorkerDetails = () => {
         workerId: worker?.id,
         userId: user?.id
       };
-  
       console.log(formData); 
-  
+      console.log(formData.bookingDate,'-------------->',formData.workDate);
       instance
         .post("/booking/api/v1", formData)
         .then((result) => {
           toast.success(result.data);
           setModalIsOpen(false)
+          navigate('/user/bookings')
         })
         .catch((error) => {
           console.error("Error while posting booking:", error);
@@ -147,11 +157,9 @@ const WorkerDetails = () => {
 
  
   return (
-    <>
-   
-      <Navbar />
-      <p className=" text-2xl  ms-96 mt-10">Personal Info</p>
-      <div className="flex gap-32  px-36 py-10">
+    <div className="bg-white">
+      <p className=" text-2xl  ms-56 font-bold mt-10">Personal Info</p>
+      <div className="flex gap-32   px-36 mt-16">
         <div className="w-1/4">
           <div className="flex gap-4">
             <div className="w-20 h-20 overflow-hidden rounded-full border border-gray-200">
@@ -172,24 +180,24 @@ const WorkerDetails = () => {
           </div>
           <hr className="mt-2" />
           <p className="text-black font-semibold text-lg">Contact</p>
-          <p className="mt-2 flex items-center gap-2">
+          <p className="mt-2 flex items-center gap-2 font-semibold">
             <CiMail />
             Email
           </p>
           <p className="text-black ms-5">{worker?.email}</p>
-          <p className="flex gap-2 mt-5 items-center">
+          <p className="flex gap-2 mt-5 items-center font-semibold">
             <FaMobileAlt />
             Phone
           </p>
           <p className="text-black ms-5">{worker?.mobileNumber}</p>
-          <p className="mt-5">Address</p>
+          <p className="mt-2 flex items-center gap-2 font-semibold"><FaAddressBook/> Address</p>
           <p className="text-black ms-5">
             {worker?.address.houseName},{worker?.address.street},
             {worker?.address.city}
             <br />
             {worker?.address.state} -{worker?.address.pincode}
           </p>
-          <div className="flex gap-10">
+          <div className="flex gap-10 mt-7">
             <button className="h-[40px]  bg-blue-500 w-32 rounded-xl border mt-5  ms-2  text-white hover:rounded-3xl duration-300">
               Message
             </button>
@@ -201,33 +209,50 @@ const WorkerDetails = () => {
             </button>
           </div>
         </div>
-        <div className="w-1/2 space-y-2">
-          <p className="mt-5">Full Name</p>
+        <div className="w-1/2 space-y-8">
+          <div className="flex gap-20">
+          <div>
+          <p className="font-bold">Full Name</p>
           <p className="text-black">{worker?.fullName}</p>
-          <p>Gender</p>
+          </div>
+          <div>
+          <p className="font-bold">Gender</p>
           <p className="text-black">{worker?.gender}</p>
+          </div>
+          </div>
  
-          <p>About</p>
+          <div>
+          <p className="mt-5 font-bold">About</p>
           <p className="text-black">{worker?.about}</p>
-          <p>Experience In years</p>
+          </div>
+          <div>
+          <p className="font-bold">Experience In years</p>
           <p className="text-black">{worker?.experience} years</p>
-          <p>Service Charge per hour</p>
+          </div>
+          <div>
+          <p className="font-bold">Service Charge per hour</p>
           <p className="text-black">₹{worker?.serviceCharge} per hour</p>
+          </div>
         </div>
       </div>
-      <p className=" text-3xl text-center mt-10">Works</p>
-      <div className="flex  justify-between px-32">
+      <p className=" text-2xl text-center font-bold mt-8">Client Reviews</p>
+      <div className="flex px-20 justify-between mb-5">
+          <Testimonial />
+          <Testimonial />
+          <Testimonial />
+          {/* <Testimonial />
+          <Testimonial />
+          <Testimonial />
+          <Testimonial />
+          <Testimonial />
+          <Testimonial /> */}
+      </div>
+        <p className=" text-2xl font-bold text-center mt-10">Works</p>
+      <div className="flex  justify-between px-32 py-10">
         <Work />
         <Work />
         <Work />
       </div>
-      <p className=" text-3xl text-center mt-10">Client Reviews</p>
-      <div className="flex px-20 justify-between">
-        <Testimonial />
-        <Testimonial />
-        <Testimonial />
-      </div>
-      <Footer />
       <ReactModal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
@@ -235,76 +260,90 @@ const WorkerDetails = () => {
         overlayClassName="fixed inset-0 bg-black bg-opacity-50"
       >
         <div className="bg-white rounded-lg p-14  shadow-lg">
-          <h2 className="text-xl font-semibold mb-4 text-center">
+          <h2 className="text-2xl font-bold mb-10 text-center ">
             Request for service
           </h2>
 
-          <p className="text-black">Choose date</p>
+          <p className="text-black ">Choose date</p>
           <div className="flex gap-10">
+            <div>
             <div className="flex justify-center mt-1">
-              <AvailabilityCalender bookedDates={bookedDates}
-               startDate={selectedDate} 
-               setStartDate={setSelectedDate}  />
+              <AvailabilityCalender  bookedDates={[...bookedDates,...unavailableDates]}
+               selectedDate={selectedDate} 
+               setSelectedDate={setSelectedDate} 
+               setDateSelectionError={setDateSelectionError} />
+            </div>
+               {dateSelectionError && (
+                <p className="text-sm text-red-500">{dateSelectionError}</p>
+               )}
             </div>
             <div className="">
               <div className="flex"></div>
-              <p className="text-center mt-14 text-black font-semibold">
+              <p className="text-center  text-lg  font-bold">
                 Add address of the location
               </p>
+              {!addressFormData.city && (
+                <div className="flex justify-end">
+
+               <button type="button" className="ml-2 px-4 py-2 rounded-xl text-white bg-yellow-500"
+               onClick={handleUseUserAddress}
+               >
+                 Use My Address
+               </button>
+                </div>
+            )}
               <div className="flex gap-20">
                 <div>
-                  <label>Housename</label>
+                  <label className="text-black ps-3 text-sm">HouseName</label>
                   <input
                     type="text"
                     name="houseName"
-                    className="bg-white w-full border text-black border-yellow-400 p-2 m-2"
+                    className={`bg-white w-full border  ${addressFormData.houseName ? "placeholder:text-black":""} border-yellow-400 p-2 m-2`}
                     placeholder={!addressFormData.houseName ? "Enter your house name" : addressFormData.houseName}  
                     onChange={handleAddressInputChange}
                     />
                 </div>
                 <div>
-                  <label>Street</label>
+                  <label className="text-black ps-3 text-sm">Street</label>
                   <input
                     type="text"
                     name="street"
-                    className="bg-white w-full border text-black border-yellow-400 p-2 m-2"
+                    className={`bg-white w-full border  ${addressFormData.street ? "placeholder:text-black":""} border-yellow-400 p-2 m-2`}
                     placeholder={!addressFormData.street ? "Enter your street" : addressFormData.street}
                     onChange={handleAddressInputChange}
                   />
                 </div>
-                <button type="button" className="ml-2 px-4 py-2 text-black"
-                onClick={handleUseUserAddress}
-                >
-                  Use My Address
-                </button>
+             <div>
+         
+             </div>
               </div>
               <div className="flex gap-10">
                 <div>
-                  <label>City</label>
+                  <label className="text-black ps-3 text-sm">City</label>
                   <input
                     type="text"
                     name="city"
-                    className="bg-white w-full border text-black border-yellow-400 p-2 m-2"
+                    className={`bg-white w-full border  ${addressFormData.city ? "placeholder:text-black":""} border-yellow-400 p-2 m-2`}
                     placeholder={!addressFormData.city ? "Enter your city" : addressFormData.city} 
                     onChange={handleAddressInputChange}
                     />
                 </div>
                 <div>
-                  <label>State</label>
+                  <label className="text-black ps-3 text-sm">State</label>
                   <input
                     type="text"
                     name="state"
-                    className="bg-white w-full border text-black border-yellow-400 p-2 m-2"
+                    className={`bg-white w-full border  ${addressFormData.state ? "placeholder:text-black":""} border-yellow-400 p-2 m-2`}
                     placeholder={!addressFormData.state ? "Enter your state" : addressFormData.state}  
                     onChange={handleAddressInputChange}
                     />
                 </div>
                 <div>
-                  <label>Pincode</label>
+                  <label className="text-black ps-3 text-sm">Pincode</label>
                   <input
                     type="number"
                     name="pincode"
-                    className="bg-white w-full border text-black border-yellow-400 p-2 m-2"
+                    className={`bg-white w-full border  ${addressFormData.pincode ? "placeholder:text-black":""} border-yellow-400 p-2 m-2`}
                     placeholder={!addressFormData.pincode ? "Enter your pincode" : addressFormData.pincode}   
                     onChange={handleAddressInputChange}
                     />
@@ -314,7 +353,7 @@ const WorkerDetails = () => {
             </div>
           </div>
           <div className="mt-10">
-            <label>Description of the work</label>
+            <label className="text-black ps-3">Description of the work</label>
             <textarea
              name="workDescription"
               className="bg-white w-full border text-black border-yellow-400 p-2 m-2"
@@ -339,7 +378,7 @@ const WorkerDetails = () => {
           </div>
         </div>
       </ReactModal>
-    </>
+    </div>
   );
 };
 

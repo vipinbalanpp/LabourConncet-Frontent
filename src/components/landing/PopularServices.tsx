@@ -1,17 +1,28 @@
-import { useSelector } from "react-redux";
 import Service from "../public/Service";
-import { RootState } from "../../redux/store";
+import { useEffect, useState } from "react";
+import { Iservice } from "../../interfaces/admin";
+import instance from "../../config/axiozConfig";
 
 const PopularServices = () => {
-  const services = useSelector((state:RootState) => state.admin.services)
+  const[services,setServices] = useState<Iservice[] | null>(null)
+  useEffect(() => {
+    const fetchData = async() => {
+      try {
+        const serviceResponse = await instance.get(`user/api/v1/get-all-services?pageNumber=0&pageSize=8`);
+        console.log(serviceResponse, 'this is service response from admin service list');
+        setServices(serviceResponse.data.services);
+      } catch (error) {
+        console.error('Error fetching services:', error);
+      }
+    };
+
+    fetchData();
+  },[])
   return (
-    <div>
-      <h1   className=" text-2xl font-semibold text-start ps-20 mt-10">Popular Services</h1>
-      <div className="flex flex-wrap mt-5 justify-between px-10 md:px-20">
-       {services.map((service) =>(
-         <Service key={service.serviceName} service={service} />
-       ))}
-        {services.map((service) =>(
+    <div className="mt-16">
+      <h1   className=" text-2xl font-semibold text-center">Popular Services</h1>
+      <div className="flex flex-wrap  justify-between px-10 md:px-20">
+       {services && services.map((service) =>(
          <Service key={service.serviceName} service={service} />
        ))}
       </div>

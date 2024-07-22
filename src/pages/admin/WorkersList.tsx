@@ -1,57 +1,60 @@
-import { useDispatch, useSelector } from "react-redux";
 import WorkerListTable from "../../components/admin/WorkerListTable";
-import { AppDispatch, RootState } from "../../redux/store";
 import { useEffect, useState } from "react";
-import { FaWindowClose } from "react-icons/fa";
+import {  FaWindowClose } from "react-icons/fa";
 import Pagination from "../../components/public/Pagination";
+import { IWorkerDetailsForStore } from "../../interfaces/worker";
 import instance from "../../config/axiozConfig";
-import { getAllWorkers } from "../../redux/actions/adminActions";
+import { Iservice } from "../../interfaces/admin";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const WorkersList = () => {
-  const workers = useSelector((state: RootState) => state.admin.workers);
-  const services = useSelector((state: RootState) => state.admin.services);
-  const dispatch = useDispatch<AppDispatch>();
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [searchInput, setSearchInput] = useState("");
+  const [workers, setWorkers] = useState<IWorkerDetailsForStore[]>([]);
+  const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalNumberOfPages, setTotalNumberOfPages] = useState(0);
   const [isBlocked, setIsBlocked] = useState<boolean | null>(null);
-  const [serviceId, setServiceId] = useState<number | null>(null);
+  const [searchInput, setSearchInput] = useState("");
+  const[serviceId,setServiceId] = useState<number | null> (null)
+  const[services,setServices] = useState<Iservice[] >([])
+  const [showDropdown,setShowDropdown] = useState(false)
+  const [selectedServiceName,setSelectedServiceName] = useState<string | null>(null)
   useEffect(() => {
-    console.log(services);
+    fetchWorkerData();
+  }, [searchInput, isBlocked, currentPage, serviceId]);
+  useEffect(() => {
+    fetchAllServices();
+  },[])
 
-    const fetchData = async () => {
-      try {
-        dispatch(
-          getAllWorkers({
-            pageNumber: currentPage - 1,
-            isBlocked: isBlocked,
-            searchInput,
-            serviceId: serviceId,
-          })
-        );
-        let query = `user/api/v1/getTotalPageNumbersOfWorkers?searchInput=${encodeURIComponent(
-          searchInput
-        )}`;
-        if (serviceId !== null) {
-          query += `&serviceId=${serviceId}`;
-        }
-        if (isBlocked !== null) {
-          query += `&isBlocked=${isBlocked}`;
-        }
-        const { data } = await instance.get(query);
-        setTotalNumberOfPages(data);
-      } catch (error) {}
-    };
-    fetchData();
-  }, [searchInput, isBlocked, currentPage, dispatch, serviceId]);
+  const fetchWorkerData = async () => {
+    const params = {
+      pageNumber : currentPage-1,
+      serviceId,
+      searchInput,
+      isBlocked
+    }
+    const workerResponse = await instance.get(`user/api/v1/getAllWorkers`,{params})
+    if(workerResponse){
+      console.log(workerResponse,'workers');
+      setWorkers(workerResponse.data.workers)
+      setTotalPages(workerResponse.data.totalNumberOfPages)
+    }
+   
+  }
+  const fetchAllServices = async () =>{
+    const serviceResponse = await instance.get(`user/api/v1/services`)
+    if(serviceResponse){
+      setServices(serviceResponse.data)  
+      console.log(serviceResponse.data);
+          
+    }
+  }
 
   const handleServiceSelect = (serviceName: string) => {
-    setShowDropdown(false);
     if (serviceName === "All") {
       setServiceId(null);
       return;
     }
+    setSelectedServiceName(serviceName);
     const service = services.find(
       (service) => service.serviceName === serviceName
     );
@@ -62,6 +65,7 @@ const WorkersList = () => {
     } else {
       console.log("Service not found");
     }
+    setShowDropdown(false)
   };
   return (
     <>
@@ -104,12 +108,19 @@ const WorkersList = () => {
           <div className="flex justify-end">
             <button
               onClick={() => setShowDropdown(true)}
-              className="px-2 mt-5 me-2 py-1 rounded-[7px] font-semibold text-sm border border-[rgb(31,41,55)] bg-[rgb(31,41,55)] text-white"
+              className="px-2 mt-5 me-2 py-1 rounded-[7px] font-semibold text-sm border border-[rgb(31,41,55)] bg-yellow-400 text-white"
             >
-              Filter By service
+            {selectedServiceName ? selectedServiceName: "Filter By Service"}
             </button>
+            {serviceId && <button
+            onClick={() => {
+              setServiceId(null);
+              setSelectedServiceName(null)
+            }}
+             className="text-black"><FontAwesomeIcon icon={faTrash} /></button>}
+
             {showDropdown && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg">
+              <div className="absolute right-0 mt-2 w-48  bg-white border border-gray-300 rounded-md shadow-lg">
                 <button
                   onClick={() => setShowDropdown(false)}
                   className="text-red-600 absolute right-0 p-2"
@@ -160,7 +171,7 @@ const WorkersList = () => {
             <Pagination
               currentPage={currentPage}
               onPageChange={setCurrentPage}
-              totalPages={totalNumberOfPages}
+              totalPages={totalPages}
             />
           </div>
         )}

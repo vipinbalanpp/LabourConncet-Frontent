@@ -10,9 +10,9 @@ export interface IWorkerCredentials {
   city: string;
   state: string;
   pincode: string;
-  expertiseIn: string;
-  experience: string;
-  serviceCharge: string;
+  expertiseIn: number;
+  experience: number;
+  serviceCharge: number;
   about: string;
   gender: string;
   dateOfBirth: string;
@@ -21,7 +21,6 @@ export interface IWorkerCredentials {
 export interface IWorkerDetailsForStore {
   about: string;
   id:string
-
   address: {
     houseName: string;
     street: string;

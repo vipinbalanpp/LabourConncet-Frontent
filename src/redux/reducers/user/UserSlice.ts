@@ -5,7 +5,6 @@ import { workerSignUp } from "../../actions/workerActions"
 import {  removeCookie } from "typescript-cookie";
 import instance from "../../../config/axiozConfig";
 import { IWorkerDetailsForStore } from "../../../interfaces/worker";
-import { access } from "fs";
 
 
 const userSlice = createSlice({

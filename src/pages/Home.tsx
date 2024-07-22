@@ -8,22 +8,24 @@ import { useNavigate } from "react-router-dom";
 import PopularServices from "../components/landing/PopularServices";
 import TopRatedWorkers from "../components/landing/TopRatedWorkers";
 import TestMonialList from "../components/landing/TestMonialList";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 
 const Home = () => {
 
   const navigate = useNavigate();
+  const user = useSelector((state:RootState) => state.user)
   const handleClientRegister = () => {
     navigate("/user-register");
   };
   return (
     <div className="bg-white">
-   
       <Banner />
       <PopularServices />
       <TopRatedWorkers />
       <TestMonialList />
-      
+                {!user && (
       <div className="flex   gap-14 md:flex-row flex-col p-4  md:px-20 pt-20">
         <div className="bg-[rgb(235,235,235)] h-[290px]  rounded-xl hover:shadow-lg hover:scale-105 duration-300">
           <div className="flex">
@@ -46,7 +48,7 @@ const Home = () => {
             <img className="w-[350px] hidden md:block h-[260px] mt-[30px]" src={client} />
           </div>
         </div>
-        <div className="bg-[rgb(115,170,215)] h-[290px]  rounded-xl hover:shadow-lg hover:scale-105 duration-300"
+          <div className="bg-[rgb(115,170,215)] h-[290px]  rounded-xl hover:shadow-lg hover:scale-105 duration-300"
           onClick={() => navigate('/worker-register')}>
           <div className="flex">
             <div className="">
@@ -66,6 +68,8 @@ const Home = () => {
           </div>
         </div>
       </div>
+        )}
+       
     </div>
   );
 };

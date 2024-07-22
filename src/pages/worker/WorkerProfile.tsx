@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import WorkerSidebar from "../../components/worker/WorkerSideBar";
 import Work from "../../components/worker/Work";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import ReactModal from "react-modal";
-import { Box, Tab, Tabs } from "@mui/material";
+import { Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import instance from "../../config/axiozConfig";
@@ -19,7 +18,7 @@ const WorkerProfile = () => {
   const [profileInfo, setProfileInfo] = useState("profile");
   const dispatch = useDispatch<AppDispatch>();
   const [editModal, setEditModal] = useState(false);
-  const user = useSelector((state: RootState) => state.user.user);
+  const user = useSelector((state: RootState) => state.user);
   const [image, setImage] = useState<string | null>(null);
   const [addressError, setAddressError] = useState<string | null>(null);
   const [errors, setErrors] = useState({});

@@ -17,7 +17,7 @@ import { fetchUserData } from "../../redux/actions/userActions";
 
 const WorkerSidebar = () => {
   const navigate = useNavigate();
-  const user = useSelector((state: RootState) => state.user.user);
+  const user = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {

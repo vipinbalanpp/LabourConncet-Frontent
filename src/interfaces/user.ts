@@ -1,3 +1,5 @@
+import { number } from "yup";
+import { Iservice } from "./admin";
 import { IWorkerDetailsForStore } from "./worker";
 
 export interface IUserCredentials {
@@ -31,7 +33,6 @@ export interface IUserDetailsForStore {
 export interface UserListTableProps {
   users: IUserDetailsForStore[];
   onBlockUser: (email: string) => void;
-  onUnBlockUser: (email: string) => void;
 }
 export interface IBooking {
   id:string
@@ -45,4 +46,11 @@ export interface IBooking {
   cancellationReason:string
   cancelledBy:string
   workLocationAddress:IAddress
+}
+export interface DecodedToken{
+  name:string
+  email:string
+}
+export interface IResult{
+    error:string
 }

@@ -4,7 +4,7 @@ import Home from "../../pages/Home";
 import { RootState } from "../../redux/store";
 
 const HomeRoute = () => {
-  const user = useSelector((state: RootState) => state.user.user);
+  const user = useSelector((state: RootState) => state.user);
   if (!user) {
     return <Home />;
   }

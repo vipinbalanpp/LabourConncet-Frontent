@@ -8,15 +8,25 @@ const StyledDatePicker = styled(DatePicker)`
     color: red;
     background-color: #f542e9;
   }
+  .react-datepicker__day--selected {
+    background-color: blue !important;
+    color: white !important;
+  }
 `;
 
 interface WorkerAvailabilityCalendarProps {
   bookedDates: Date[];
-  startDate: Date | null;
-  setStartDate: (date: Date | null) => void;
+  selectedDate: Date | null;
+  setSelectedDate: (date: Date | null) => void;
+  setDateSelectionError?: (error: string | null) => void;
 }
 
-const AvailabilityCalendar: React.FC<WorkerAvailabilityCalendarProps> = ({ bookedDates, startDate, setStartDate }) => {
+const AvailabilityCalendar: React.FC<WorkerAvailabilityCalendarProps> = ({
+  bookedDates,
+  selectedDate,
+  setSelectedDate,
+  setDateSelectionError
+}) => {
   const today = new Date();
   const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
 
@@ -26,12 +36,31 @@ const AvailabilityCalendar: React.FC<WorkerAvailabilityCalendarProps> = ({ booke
     );
   };
 
+  const dayClassName = (date: Date) => {
+    if (selectedDate && date.toDateString() === selectedDate.toDateString()) {
+      return 'react-datepicker__day--selected';
+    }
+    return isBooked(date) ? '' : 'font-bold';
+  };
+
+  const handleDateChange = (date: Date | null) => {
+    if (date) {
+      const adjustedDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+      setSelectedDate(adjustedDate);
+      if (setDateSelectionError) {
+        setDateSelectionError(null);
+      }
+    } else {
+      setSelectedDate(date);
+    }
+  };
+
   return (
     <StyledDatePicker
-      selected={startDate}
-      onChange={(date: Date | null) => setStartDate(date)}
+      selected={selectedDate}
+      onChange={handleDateChange}
       inline
-      dayClassName={(date: Date) => (isBooked(date) ? 'react-datepicker__day--disabled' : null)}
+      dayClassName={dayClassName}
       excludeDates={bookedDates}
       minDate={tomorrow}
     />

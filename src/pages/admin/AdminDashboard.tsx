@@ -1,5 +1,4 @@
 
-import AdminSidebar from '../../components/admin/AdminSidebar';
 
 const AdminDashboard = () => {
     return (

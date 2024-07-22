@@ -1,25 +1,22 @@
-import { Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material'
-import image from '../../assets/plwork2.webp'
-const Work = () => {
-    return (
-        <div className='hover:shadow-lg hover:scale-105 duration-300 mt-5'>
+import image from '../../assets/plwork2.webp';
 
-<Card sx={{ maxWidth: 405, maxHeight: 400 }}> 
-            <CardActionArea>
-          <CardMedia
-            component="img"
-            image={image}
-            alt="green iguana"
-            />
-          <CardContent>
-            <Typography variant="body2" color="text.secondary">
-              L“Mauris eget lorem odio. Mauris convallis justo molestie metus aliquam lacinia. Suspendisse ut dui vulputate augue condimentum ornare. Morbi vitae tristique ante”
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-            </div>
-    )
+const Work = () => {
+  return (
+    <div className='max-w-sm max-h-[400px] border border-yellow-500 bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg hover:scale-105 duration-300 mt-5 cursor-pointer'>
+      <div className='relative p-2'>
+        <img 
+          className='w-full h-[240px] object-cover'
+          src={image}
+          alt='work'
+        />
+      </div>
+      <div className='p-4'>
+        <p className='text-gray-600 text-sm'>
+          “Mauris eget lorem odio. Mauris convallis justo molestie metus aliquam lacinia. Suspendisse ut dui vulputate augue condimentum ornare. Morbi vitae tristique ante”
+        </p>
+      </div>
+    </div>
+  );
 }
 
-export default Work
+export default Work;

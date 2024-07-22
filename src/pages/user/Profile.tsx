@@ -16,7 +16,7 @@ import LoginInfo from "../../components/public/LoginInfo";
 
 const Profile = () => {
   const [profileActive, setProfileActive] = useState(true);
-  const user = useSelector((state: RootState) => state.user.user);
+  const user = useSelector((state: RootState) => state.user);
   const [editAddressModalIsOpen, setEditAddressModalIsOpen] = useState(false);
   const [addressError, setAddressError] = useState<string | null>(null);
   const [image,setImage] = useState<string | null>(null);
@@ -26,11 +26,11 @@ const Profile = () => {
   const [editFullNameInput,setEditFullNameInput] = useState(false)
   const [addAdrressModalIsOpen,setAddAdrressModalIsOpen] = useState(false)
   const [addressFromData, setAddressFromData] = useState({
-    houseName:  null,
-    street: null,
-    city:null,
-    state: null,
-    pincode: null,
+    houseName:  "",
+    street: '',
+    city:'',
+    state: '',
+    pincode: '',
   });
   useEffect(() =>{
       if(user?.address){

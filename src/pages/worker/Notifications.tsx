@@ -1,4 +1,3 @@
-import WorkerSidebar from "../../components/worker/WorkerSideBar"
 
 
 const Notifications = () => {

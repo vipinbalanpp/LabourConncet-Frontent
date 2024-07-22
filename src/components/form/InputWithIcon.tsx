@@ -1,5 +1,4 @@
 import { Field, ErrorMessage } from "formik";
-import { useEffect, useRef } from "react";
 
 type InputWithIconType = {
   title: string;

@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faLock, faLockOpen, faUser } from "@fortawesome/free-solid-svg-icons";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { Button, IconButton } from "@mui/material";
-import BlockIcon from "@mui/icons-material/Block";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Modal from "react-modal";
 import { UserListTableProps } from "../../interfaces/user";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const UserListTable: React.FC<UserListTableProps> = ({ users, onBlockUser, onUnBlockUser }) => {
+const UserListTable: React.FC<UserListTableProps> = ({ users, onBlockUser }) => {
   const [blockModalIsOpen, setBlockModalIsOpen] = useState(false);
   const [unBlockModalIsOpen, setUnBlockModalIsOpen] = useState(false);
   const [selectedUserEmail, setSelectedUserEmail] = useState("");
+  const[reason,setReason] = useState('')
+  const[reasonError,setReasonError] = useState(false)
 
   const handleOpenBlockModal = (email:string) => {
     setSelectedUserEmail(email);
@@ -27,6 +27,14 @@ const UserListTable: React.FC<UserListTableProps> = ({ users, onBlockUser, onUnB
     setSelectedUserEmail(email);
     setUnBlockModalIsOpen(true);
   };
+  const handleBlock = () =>{
+      if(reason.trim() && reason.trim().length <10){
+        console.log(reason,'reason');
+        setReasonError(true)
+        onBlockUser(selectedUserEmail)
+        setBlockModalIsOpen(false)
+      }
+  }
 
   return (
     <>
@@ -79,16 +87,17 @@ const UserListTable: React.FC<UserListTableProps> = ({ users, onBlockUser, onUnB
                   {user.email}
                 </TableCell>
                 <TableCell className="text-base">
-                  {user.blocked ? "Blocked" : "Active"}
+                 <p className={!user.blocked?'text-green-500' : 'text-red-500'}> {user.blocked ? "Blocked" : "Active"}</p>
                 </TableCell>
                 <TableCell >
                   {!user.blocked ? (
                     <IconButton onClick={() => handleOpenBlockModal(user.email)}>
-                      <CheckCircleIcon color="primary" />
+                     <FontAwesomeIcon icon={faLock}/>
                     </IconButton>
                   ) : (
                     <IconButton onClick={() => handleOpenUnBlockModal(user.email)}>
-                      <BlockIcon color="secondary" />
+                                           <FontAwesomeIcon icon={faLockOpen}/>
+
                     </IconButton>
                   )}
                 </TableCell>
@@ -100,44 +109,42 @@ const UserListTable: React.FC<UserListTableProps> = ({ users, onBlockUser, onUnB
           </TableBody>
         </Table>
       </TableContainer>
-      <Modal
-        isOpen={blockModalIsOpen}
-        onRequestClose={() => setBlockModalIsOpen(false)}
-        className="fixed inset-0 flex items-center justify-center z-50"
-        overlayClassName="fixed inset-0 bg-black bg-opacity-50"
-      >
-        <div className="bg-white rounded-lg p-6 w-96 shadow-lg">
-          <h2 className="text-xl font-semibold mb-4">Confirm Action</h2>
-          <label htmlFor="blockReason" className="block text-sm font-medium text-gray-700 mb-2">
-    Enter the reason for blocking
-  </label>
-  <input
-    type="text"
-    id="blockReason"
-    placeholder="Reason.."
-    required
-    className="w-full p-2 border bg-white  border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-  />
-        
-          <div className="flex justify-end mt-4 space-x-2">
-            <Button
-              className="bg-gray-500 text-white rounded px-4 py-2"
-              onClick={() => setBlockModalIsOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              className="bg-blue-500 text-white rounded px-4 py-2"
-              onClick={() => {
-                onBlockUser(selectedUserEmail);
-                setBlockModalIsOpen(false);
-              }}
-            >
-              Confirm
-            </Button>
-          </div>
+    <Modal
+      isOpen={blockModalIsOpen}
+      onRequestClose={() => setBlockModalIsOpen(false)}
+      className="fixed inset-0 flex items-center justify-center z-50"
+      overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+    >
+      <div className="bg-white rounded-xl  p-6 w-1/3  shadow-lg transform  transition-transform duration-300 ease-out">
+        <h2 className="text-xl font-semibold mb-4 text-center">Confirm Action</h2>
+        <label htmlFor="blockReason" className="block text-sm pt-10 font-medium text-gray-700 mb-2">
+          Enter the reason for blocking
+        </label>
+        <input
+        onChange={(e) => setReason(e.target.value)}
+          type="text"
+          id="blockReason"
+          placeholder="Reason.."
+          required
+          className="w-full p-2 border border-gray-300 rounded-xl bg-white h-20  text-black shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
+        {reasonError && <p className="text-red-500 text-sm font-semibold">Enter a valid reason for blocking</p>}
+        <div className="flex justify-end pt-10 mt-6 space-x-3">
+          <button
+            className="bg-gray-500 text-white rounded px-4 py-2 hover:bg-gray-600 transition-colors duration-200"
+            onClick={() => setBlockModalIsOpen(false)}
+          >
+            Cancel
+          </button>
+          <button
+            className="bg-red-500 text-white rounded px-4 py-2 transition-colors duration-200"
+            onClick={() => handleBlock}
+          >
+            Confirm
+          </button>
         </div>
-      </Modal>
+      </div>
+    </Modal>
       <Modal
         isOpen={unBlockModalIsOpen}
         onRequestClose={() => setUnBlockModalIsOpen(false)}
@@ -156,10 +163,7 @@ const UserListTable: React.FC<UserListTableProps> = ({ users, onBlockUser, onUnB
               </Button>
             <Button
               className="bg-blue-500 text-white rounded px-4 py-2"
-              onClick={() => {
-                onUnBlockUser(selectedUserEmail);
-                setUnBlockModalIsOpen(false);
-              }}
+              onClick={() => handleBlock}
             >
               Confirm
             </Button>

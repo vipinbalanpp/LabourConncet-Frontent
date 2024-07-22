@@ -8,17 +8,31 @@ import Logo from "../../components/public/Logo";
 import InputWithIcon from "../../components/form/InputWithIcon";
 import PasswordInputWithIcon from "../../components/form/PasswordInput";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../redux/store";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../redux/store";
 import axios from "axios";
 import { IWorkerCredentials } from "../../interfaces/worker";
 import { workerSignUp } from "../../redux/actions/workerActions";
+import { useEffect, useState } from "react";
+import { Iservice } from "../../interfaces/admin";
+import instance from "../../config/axiozConfig";
 
 
 const WorkerRegistration = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const services = useSelector((state:RootState) => state.admin.services)
+  const [services, setServices] = useState<Iservice[]>([]);
+  useEffect(()=>{
+    fetchAllServices()
+  },[])
+  const fetchAllServices = async () =>{
+    const serviceResponse = await instance.get(`user/api/v1/services`)
+    if(serviceResponse){
+      setServices(serviceResponse.data)  
+      console.log(serviceResponse.data);
+          
+    }
+  }
 
   const initialValues = {
     fullname: "",
@@ -60,9 +74,9 @@ const WorkerRegistration = () => {
     city: Yup.string().required("City is required"),
     state: Yup.string().required("State is required"),
     pincode: Yup.string()
-      .matches(/^[0-9]{6}$/, "Pincode must be exactly 6 digits")
+      .matches (/^[0-9]{6}$/, "Pincode must be exactly 6 digits")
       .required("Pincode is required"),
-    expertiseIn: Yup.string().required("Expertise is required"),
+    expertiseIn: Yup.number().required("Select a service"),
     experience: Yup.number().required("Experience is required"),
     serviceCharge: Yup.number().required("Service charge is required"),
     about: Yup.string().required("About is required"),
@@ -192,7 +206,7 @@ const WorkerRegistration = () => {
   >
     <option value="" disabled hidden>Select service</option>
     {services.map((service) => (
-      <option key={service.serviceName} value={service.serviceName}>
+      <option key={service.serviceName} value={service.serviceId}>
         {service.serviceName}
       </option>
     ))}

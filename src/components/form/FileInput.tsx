@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import {  ErrorMessage, useFormikContext } from 'formik';
-import axios from 'axios';
-
 type TextAreaProps = {
   title: string,
   name: string,

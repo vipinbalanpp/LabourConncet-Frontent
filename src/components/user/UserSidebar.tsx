@@ -11,7 +11,7 @@ import { AppDispatch, RootState } from "../../redux/store";
 const UserSidebar = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
-    const user = useSelector((state: RootState) => state.user.user);
+    const user = useSelector((state: RootState) => state.user);
 
     const handleclick = (path: string) => {
         navigate(path);
@@ -45,7 +45,7 @@ const UserSidebar = () => {
                 <nav className="flex-grow mt-10">
                     <ul className="space-y-4">
                         <NavLink
-                            to="/profile"
+                            to="/user/profile"
                             className={({ isActive }) =>
                                 `flex items-center p-4 rounded-xl transition-all duration-300 ${
                                     isActive
@@ -53,7 +53,7 @@ const UserSidebar = () => {
                                         : "duration-300 hover:translate-x-3 bg-white text-gray-800"
                                 }`
                             }
-                            onClick={() => handleclick("/profile")}
+                            onClick={() => handleclick("/user/profile")}
                         >
                             <FontAwesomeIcon icon={faChartBar} className="mr-2" />
                             Personal Info
@@ -67,13 +67,13 @@ const UserSidebar = () => {
                                         : "duration-300 hover:translate-x-3 bg-white text-gray-800"
                                 }`
                             }
-                            onClick={() => handleclick("/admin/users-list")}
+                            onClick={() => handleclick("/user/notifications")}
                         >
                             <FontAwesomeIcon icon={faBell} className="mr-2" />
                             Notifications
                         </NavLink>
                         <NavLink
-                            to="/bookings"
+                            to="/user/bookings"
                             className={({ isActive }) =>
                                 `flex items-center p-4 rounded-xl transition-all duration-300 ${
                                     isActive
@@ -81,13 +81,13 @@ const UserSidebar = () => {
                                         : "duration-300 hover:translate-x-3 bg-white text-gray-800"
                                 }`
                             }
-                            onClick={() => handleclick("/bookings")}
+                            onClick={() => handleclick("/user/bookings")}
                         >
                             <FontAwesomeIcon icon={faHardHat} className="mr-2" />
                             My Bookings
                         </NavLink>
                         <NavLink
-                            to="/admin/services-list"
+                            to="/user/messages"
                             className={({ isActive }) =>
                                 `flex items-center p-4 rounded-xl transition-all duration-300 ${
                                     isActive
@@ -95,7 +95,7 @@ const UserSidebar = () => {
                                         : "duration-300 hover:translate-x-3 bg-white text-gray-800"
                                 }`
                             }
-                            onClick={() => handleclick("/admin/services-list")}
+                            onClick={() => handleclick("/user/messages")}
                         >
                             <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
                             Messages
@@ -109,7 +109,7 @@ const UserSidebar = () => {
                                         : "duration-300 hover:translate-x-3 bg-white text-gray-800"
                                 }`
                             }
-                            onClick={() => handleclick("/admin/services-list")}
+                            onClick={() => handleclick("/user/favourites")}
                         >
                             <FontAwesomeIcon icon={faHeart} className="mr-2" />
                             Favourites

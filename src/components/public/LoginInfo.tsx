@@ -11,7 +11,7 @@ const LoginInfo = () => {
     const [newPassword, setNewPassword] = useState('');
     const [passwordError, setPasswordError] = useState<string | null>(null);
     const [confirmNewPassword, setConfirmNewPassword] = useState<string | null>(null);
-    const user = useSelector((state: RootState) => state.user.user);
+    const user = useSelector((state: RootState) => state.user);
     const handleChangePassword = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if(oldPassword === null || newPassword === null || confirmNewPassword === null){

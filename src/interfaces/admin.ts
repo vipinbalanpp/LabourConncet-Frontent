@@ -19,3 +19,8 @@ export interface IGetAllUsersParams {
     isBlocked?: boolean | null;
     serviceId?: number | null
   }
+  export interface IGetAllServiceParams{
+    pageNumber: number;
+    pageSize?:number
+    searchInput?: string;
+  }

@@ -5,7 +5,7 @@ import instance from "../../config/axiozConfig"
 
 export const workerSignUp = createAsyncThunk(
     "worker/workerSignUp",
-    async (userCredentials:IWorkerCredentials,{rejectWithValue}) =>{
+    async (userCredentials:IWorkerCredentials,{}) =>{
         try{
             console.log(userCredentials,'------------>usercredential when register');
             
