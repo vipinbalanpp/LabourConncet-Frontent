@@ -1,4 +1,4 @@
-import { Field, ErrorMessage } from "formik";
+import { Field, ErrorMessage, useFormik, useField } from "formik";
 
 type InputWithIconType = {
   title: string;
@@ -7,11 +7,12 @@ type InputWithIconType = {
   placeholder: string;
   type: string;
   onchange?:(value:string)=>void
-  setEmailVerified?:(value:string)=>void
+  handleChange?: () => void
+  setValue?: (value:any) => void
 };
 
-const InputWithIcon = ({ title, name, icon, placeholder, type,onchange ,setEmailVerified}: InputWithIconType) => {
-   
+const InputWithIcon = ({ title, name, icon, placeholder, type,setValue,onchange,handleChange }: InputWithIconType) => {
+  const [field, meta] = useField(name);
   return (
     <div className="mb-5">
       <p>
@@ -25,6 +26,12 @@ const InputWithIcon = ({ title, name, icon, placeholder, type,onchange ,setEmail
           type={type}
           placeholder={placeholder}
           validate={ onchange}
+          onChange ={(e: any) => {
+            field.onChange(e)
+            if(setValue)
+            setValue(e.target.value)
+            if (handleChange) handleChange();
+          }}
         />
       </div>
       <ErrorMessage

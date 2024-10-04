@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Work from "../../components/worker/Work";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import ReactModal from "react-modal";
-import { Box } from "@mui/material";
+import { Box, Tab, Tabs } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import instance from "../../config/axiozConfig";
@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import { fetchUserData } from "../../redux/actions/userActions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LoginInfo from "../../components/public/LoginInfo";
+import { format } from "date-fns";
 
 const WorkerProfile = () => {
   const [profileInfo, setProfileInfo] = useState("profile");
@@ -188,7 +189,7 @@ const WorkerProfile = () => {
     <>
       <div className="flex">
         <div className="min-h-screen mt-10">
-        {/* <Tabs
+        <Tabs
       value={profileInfo}
       onChange={handleTabChange}
       aria-label="secondary"
@@ -213,8 +214,8 @@ const WorkerProfile = () => {
         label="Works"
         className="font-bold text-yellow-600 hover:text-yellow-600 focus:text-yellow-600 transition-colors duration-200"
       />
-    </Tabs> */}
-  <button 
+    </Tabs>
+  {/* <button 
 onClick={() => setProfileInfo('profile')}
   className={`px-4  font-bold   me-1  rounded transition-colors duration-300 ${profileInfo === 'profile' ? 'border-b-4 border-yellow-500':''}`}>
  MY PROFILE
@@ -233,7 +234,7 @@ onClick={() => setProfileInfo('availability')}
   onClick={() => setProfileInfo('works')}
   className={`px-4   font-bold   me-1  rounded transition-colors duration-300 ${profileInfo === 'works' ? 'border-b-4 border-yellow-500':''}`}>
     WORKS
-    </button>
+    </button> */}
 
 
           {profileInfo === "profile" ? (
@@ -251,11 +252,11 @@ onClick={() => setProfileInfo('availability')}
               <div className="flex gap-56 pt-10">
                 <div>
                   <p className="font-bold">Mobile</p>
-                  <p className="text-black">{user?.mobileNumber}</p>
+                  <p className="text-black">{ user?.mobileNumber}</p>
                 </div>
                 <div>
                   <p className="font-bold">Date Of Birth</p>
-                  <p className="text-black">{user?.dateOfBirth}</p>
+                  <p className="text-black">{format(new Date(user?.dateOfBirth),"PPP")}</p>
                 </div>
                 <div>
                   <p className="font-bold">Email</p>
@@ -297,7 +298,7 @@ onClick={() => setProfileInfo('availability')}
                   <p className="text-black pt-5">
                     {user?.address.houseName},{user?.address.street} <br />{" "}
                     {user?.address.city},{user?.address.state}-
-                    {user?.address.pincode}
+                    {user?.address.pinCode}
                   </p>
                   <button
                     className="text-yellow-500 mt-3"

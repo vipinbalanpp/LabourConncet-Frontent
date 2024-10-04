@@ -12,7 +12,7 @@ import { AppDispatch } from "../../redux/store";
 import toast from "react-hot-toast";
 import OtpInput from "../../components/form/OtpInput";
 
-const ClientRegister = () => {
+const UserRegister = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [verifyButtonClicked, setVerifyButtonClicked] = useState(false);
@@ -21,17 +21,38 @@ const ClientRegister = () => {
 
   const initialValues = {
     fullName: "",
+    username:"",
     email: "",
     password: "",
     confirmPassword: "",
   };
 
   const validationSchema = Yup.object().shape({
-    fullName: Yup.string().required("Full name is required"),
-    email: Yup.string().email("Invalid email").required("Email is required"),
+    fullName: Yup.string()
+      .trim() 
+      .required("Full name is required")
+      .min(2, "Full name should be at least 2 characters")
+      .max(30, "Full name should be a maximum of 30 characters"),
+  
+    username: Yup.string()
+      .trim() 
+      .required("Username is required")
+      .min(3, "Username should be at least 2 characters")
+      .max(20, "Username should be a maximum of 20 characters"),
+  
+    email: Yup.string()
+      .email("Invalid email")
+      .required("Email is required"),
+  
     password: Yup.string()
-      .min(6, "Password must be at least 6 characters")
-      .required("Password is required"),
+      .min(8, "Password must be at least 8 characters") 
+      .max(30, "Username should be a maximum of 20 characters")
+      .required("Password is required")
+      .matches(/[A-Z]/, "Password must contain at least one uppercase letter") 
+      .matches(/[a-z]/, "Password must contain at least one lowercase letter") 
+      .matches(/[0-9]/, "Password must contain at least one number") 
+      .matches(/[\W_]/, "Password must contain at least one special character"),
+  
     confirmPassword: Yup.string()
       .oneOf([Yup.ref("password")], "Passwords must match")
       .required("Confirm password is required"),
@@ -39,12 +60,14 @@ const ClientRegister = () => {
 
   const handleSubmit = (values: {
     fullName: string;
+    username:string;
     password: string;
     email: string;
     confirmPassword: string;
   }) => {
     let formData = {
       fullName: values.fullName,
+      username:values.username,
       email: values.email,
       password: values.password,
       role: "USER",
@@ -105,7 +128,7 @@ const ClientRegister = () => {
       <div className="w-1/2 bg-white flex flex-col justify-center items-center relative">
         {!verifyButtonClicked && !emailVerified && (
           <button
-            className="absolute ms-[570px] mt-[-260px] text-yellow-500"
+            className="absolute ms-[570px] mt-[-170px] text-yellow-500"
             onClick={handleVerifyEmailButtonClicked}
           >
             verify
@@ -135,6 +158,13 @@ const ClientRegister = () => {
                 placeholder="Enter your Full Name"
                 type="text"
               />
+               <InputWithIcon
+                name="username"
+                title="Username"
+                icon="👤"
+                placeholder="Enter your username"
+                type="text"
+              />
               <InputWithIcon
                 name="email"
                 title="Email"
@@ -143,12 +173,14 @@ const ClientRegister = () => {
                 type="text"
                 onchange={(value: string) => {
                   console.log(value, "value of email");
+                 
                   setEmailValue(value);
                 }}
-                setEmailVerified={() => {
-                  setEmailVerified(false);
-                  console.log(emailVerified);
+                setValue={setEmailValue}
+                handleChange={() => {
+                  setEmailVerified(false)
                 }}
+              
               />
 
               {verifyButtonClicked && (
@@ -237,4 +269,4 @@ const ClientRegister = () => {
   );
 };
 
-export default ClientRegister;
+export default UserRegister;

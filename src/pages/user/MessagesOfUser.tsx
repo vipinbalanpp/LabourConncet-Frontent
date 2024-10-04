@@ -1,14 +1,11 @@
-import Messages from "../../components/public/Messages"
-import UserSidebar from "../../components/user/UserSidebar"
-
+import Messages from "../../components/public/Messages";
 
 const MessagesOfUser = () => {
-    return (
-        <div className="flex">
-            <UserSidebar/>
-            <Messages/>
-        </div>
-    )
-}
+  return (
+    <>
+      <Messages />
+    </>
+  );
+};
 
-export default MessagesOfUser
+export default MessagesOfUser;

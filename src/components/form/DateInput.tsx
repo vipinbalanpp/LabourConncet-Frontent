@@ -10,7 +10,7 @@ const DateInput = ({ title, name, placeholder }: TextInputProps) => {
   return (
     <div className="ps-5">
       <p>
-        <label className="text-black " >{title}</label>
+        <label className="text-black font-semibold" >{title}</label>
       </p>
       <div className="flex items-center">
         <Field

@@ -4,10 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import { AppDispatch, RootState } from "../../redux/store";
 import { logout } from "../../redux/reducers/user/UserSlice";
+import { FaBars, FaTimes } from "react-icons/fa";
 
 const Navbar = () => {
   const user = useSelector((state: RootState) => state.user);
   const [profileButtonClicked, setProfileButtonClicked] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -36,90 +38,103 @@ const Navbar = () => {
     setProfileButtonClicked(!profileButtonClicked);
   };
 
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
   return (
     <>
-      <div className=" border   border-black">
-        <div className="flex justify-between items-center">
-        
-          <div className="mt-3">
-
+      <div className="border border-black">
+        <div className="flex justify-between items-center px-4 py-3 md:px-8">
           <Logo color="black" />
+          <div className="md:hidden">
+            <button onClick={toggleMenu}>
+              {menuOpen ? (
+                <FaTimes className="text-2xl" />
+              ) : (
+                <FaBars className="text-2xl" />
+              )}
+            </button>
           </div>
-          <div className="flex py-5 gap-x-8  pe-[100px] text-black font-semibold">
+          <div
+            className={`${
+              menuOpen ? "block" : "hidden"
+            } md:flex md:items-center md:gap-x-8 text-black font-semibold`}
+          >
             <NavLink
-              to={"/"}
-              className={({ isActive }) => {
-                return `hover:text-blue-600 cursor-pointer hover:scale-95 duration-300 ${
+              to="/"
+              className={({ isActive }) =>
+                `hover:text-blue-600 cursor-pointer hover:scale-95 duration-300 ${
                   isActive
                     ? "border-b-2 border-yellow-400 duration-500 transition-all"
-                    : " nav-hover"
-                }`;
-              }}
+                    : "nav-hover"
+                }`
+              }
             >
               Home
             </NavLink>
             <NavLink
-              to={"/service-list"}
-              className={({ isActive }) => {
-                return `hover:text-blue-600 cursor-pointer hover:scale-95 duration-300 ${
+              to="/service-list"
+              className={({ isActive }) =>
+                `hover:text-blue-600 cursor-pointer hover:scale-95 duration-300 ${
                   isActive
                     ? "border-b-2 border-yellow-400 duration-500 transition-all"
                     : "nav-hover"
-                }`;
-              }}
+                }`
+              }
             >
               Services
             </NavLink>
             {user && (
               <NavLink
-                to={"user/messages"}
-                className={({ isActive }) => {
-                  return `hover:text-blue-600 cursor-pointer hover:scale-95 duration-300 ${
+                to="user/messages"
+                className={({ isActive }) =>
+                  `hover:text-blue-600 cursor-pointer hover:scale-95 duration-300 ${
                     isActive
                       ? "border-b-2 border-yellow-400 duration-500 transition-all"
                       : "nav-hover"
-                  }`;
-                }}
+                  }`
+                }
               >
                 Messages
               </NavLink>
             )}
             {user && (
               <NavLink
-                to={"/notifications"}
-                className={({ isActive }) => {
-                  return `hover:text-blue-600 cursor-pointer hover:scale-95 duration-300 ${
+                to="/notifications"
+                className={({ isActive }) =>
+                  `hover:text-blue-600 cursor-pointer hover:scale-95 duration-300 ${
                     isActive
                       ? "border-b-2 border-yellow-400 duration-500 transition-all"
                       : "nav-hover"
-                  }`;
-                }}
+                  }`
+                }
               >
                 Notifications
               </NavLink>
             )}
             <NavLink
-              to={"/about-us"}
-              className={({ isActive }) => {
-                return `hover:text-blue-600 cursor-pointer hover:scale-95 duration-300 ${
+              to="/about-us"
+              className={({ isActive }) =>
+                `hover:text-blue-600 cursor-pointer hover:scale-95 duration-300 ${
                   isActive
                     ? "border-b-2 border-yellow-400 duration-500 transition-all"
                     : "nav-hover"
-                }`;
-              }}
+                }`
+              }
             >
               About us
             </NavLink>
             {!user && (
               <NavLink
-                to={"/login"}
-                className={({ isActive }) => {
-                  return `hover:text-blue-600 cursor-pointer hover:scale-95 duration-300 ${
+                to="/login"
+                className={({ isActive }) =>
+                  `hover:text-blue-600 cursor-pointer hover:scale-95 duration-300 ${
                     isActive
                       ? "border-b-2 border-yellow-400 duration-500 transition-all"
                       : "nav-hover"
-                  }`;
-                }}
+                  }`
+                }
               >
                 Sign in
               </NavLink>
@@ -132,7 +147,7 @@ const Navbar = () => {
                 >
                   {user.profileImageUrl ? (
                     <img
-                      className="w-9 h-9 rounded-full"
+                      className="w-9 h-9 border-2 border-black rounded-full"
                       src={user.profileImageUrl}
                       alt="Profile"
                     />
@@ -155,7 +170,7 @@ const Navbar = () => {
                 </div>
                 {profileButtonClicked && (
                   <div
-                    className="absolute   mt-2 w-32 bg-white border rounded shadow-lg"
+                    className="absolute right-0 mt-2 w-32 bg-white border rounded shadow-lg z-10"
                     ref={dropdownRef}
                   >
                     <NavLink

@@ -16,26 +16,32 @@ import { workerSignUp } from "../../redux/actions/workerActions";
 import { useEffect, useState } from "react";
 import { Iservice } from "../../interfaces/admin";
 import instance from "../../config/axiozConfig";
-
+import toast from "react-hot-toast";
+import { sendOtp } from "../../redux/actions/userActions";
+import OtpInput from "../../components/form/OtpInput";
 
 const WorkerRegistration = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [services, setServices] = useState<Iservice[]>([]);
-  useEffect(()=>{
-    fetchAllServices()
-  },[])
-  const fetchAllServices = async () =>{
-    const serviceResponse = await instance.get(`user/api/v1/services`)
-    if(serviceResponse){
-      setServices(serviceResponse.data)  
-      console.log(serviceResponse.data);
-          
+  const [emailVerified,setEmailVerified] = useState(false);
+  const [verifyButtonClicked,setVerifyButtonClicked] = useState(false)
+  const [emailValue, setEmailValue] = useState("");
+
+  useEffect(() => {
+    fetchAllServices();
+  }, []);
+
+  const fetchAllServices = async () => {
+    const serviceResponse = await instance.get(`service/api/v1/services`);
+    if (serviceResponse) {
+      setServices(serviceResponse.data);
     }
-  }
+  };
 
   const initialValues = {
     fullname: "",
+    username:"",
     mobileNumber: "",
     email: "",
     password: "",
@@ -44,8 +50,8 @@ const WorkerRegistration = () => {
     street: "",
     city: "",
     state: "",
-    pincode: "",
-    expertiseIn: "",
+    pinCode: "",
+    serviceId: null,
     experience: "",
     serviceCharge: "",
     about: "",
@@ -56,7 +62,7 @@ const WorkerRegistration = () => {
 
   const validationSchema = Yup.object({
     fullname: Yup.string().required("Full name is required"),
-    
+    username: Yup.string().required('Username is required'),
     mobileNumber: Yup.string()
       .matches(/^[0-9]{10}$/, "Mobile number must be exactly 10 digits")
       .required("Mobile number is required"),
@@ -73,8 +79,8 @@ const WorkerRegistration = () => {
     street: Yup.string().required("Street is required"),
     city: Yup.string().required("City is required"),
     state: Yup.string().required("State is required"),
-    pincode: Yup.string()
-      .matches (/^[0-9]{6}$/, "Pincode must be exactly 6 digits")
+    pinCode: Yup.string()
+      .matches(/^[0-9]{6}$/, "Pincode must be exactly 6 digits")
       .required("Pincode is required"),
     expertiseIn: Yup.number().required("Select a service"),
     experience: Yup.number().required("Experience is required"),
@@ -87,17 +93,20 @@ const WorkerRegistration = () => {
     profileImage: Yup.mixed().required("Profile image is required"),
   });
 
+  const handleSubmit = async (values: any) => {
+   
+    const formData = new FormData();
+    formData.append("file", values.profileImage!);
+    formData.append("upload_preset", "ahfj5695");
+    
+    const response = await axios.post(
+      "https://api.cloudinary.com/v1_1/dnue064gc/image/upload",
+      formData
+    );
 
-
-  const handleSubmit = async(values:any) => {
-       const formData = new FormData();
-      formData.append("file",values.profileImage!)
-      formData.append("upload_preset","ahfj5695")
-    console.log('in handle submit');
-    console.log(values.profileImage);
-         const response =   await axios.post('https://api.cloudinary.com/v1_1/dnue064gc/image/upload',formData)
-    const data : IWorkerCredentials= {
-      fullname: values.fullname,
+    const data: IWorkerCredentials = {
+      fullName: values.fullname,
+      username:values.username,
       mobileNumber: values.mobileNumber,
       email: values.email,
       password: values.password,
@@ -105,56 +114,78 @@ const WorkerRegistration = () => {
       street: values.street,
       city: values.city,
       state: values.state,
-      pincode: values.pincode,
-      expertiseIn: values.expertiseIn,
+      pinCode: values.pinCode,
+      serviceId: values.expertiseIn,
       experience: values.experience,
       serviceCharge: values.serviceCharge,
       about: values.about,
       gender: values.gender,
       dateOfBirth: values.dateOfBirth,
-      profileImageUrl:response.data.secure_url
+      profileImageUrl: response.data.secure_url,
+    };
+    if(!emailVerified){
+      toast.error('Email not verified');
+      return;
     }
-    console.log(data);
-    dispatch(workerSignUp(data)).then(result=>{
-      console.log(result,'----------------------------worker registration result')
-      if(result)navigate('/')
-    })
+    dispatch(workerSignUp(data)).then((result) => {
+      if (result) navigate("/");
+    });    
+    console.log(data,'-----------<data>');
+    
+  };
+  const handleVerifyEmailButtonClicked = async () => { 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailValue) {
+        toast.error('Enter email Id')
+        return;
+    }
+    if (!emailRegex.test(emailValue)) {
+      toast.error('Enter valid email id')
+      return;
+  }
+    const response = await dispatch(sendOtp(emailValue));
+    if(response.meta.requestStatus !== "rejected")
+    setVerifyButtonClicked(true);
   };
 
   return (
-    <div className="h-full overflow-y-auto " 
-  
-    >
-      <div className="top-0 left-0">
-        <Logo color="black" />
-      </div>
-      <h2 className="text-2xl font-bold pt-20 pb-10 mb-6 text-center">
-        Worker Registration
-      </h2>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >{({
-        
-      })=>(
-          <Form  >
-            <div className="flex flex-wrap gap-6">
-              <div className="flex w-full justify-between">
-                <div className="w-1/2 px-20 space-y-10">
+    <>
+      <Logo color="black" />
+      <div className="px-4 py-8 md:px-8 md:py-12 lg:px-16 lg:py-20 bg-gray-100 relative">
+        <div className="bg-white shadow-lg rounded-xl p-6 md:p-8 lg:p-12">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-6">Worker Registration</h2>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
+            {() => (
+              <Form>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   <InputWithIcon
                     title="Full Name"
                     name="fullname"
                     placeholder="Enter your full name"
                     type="text"
                     icon="👤"
-                  /> 
+                   
+                  />
+                   <InputWithIcon
+                    title="Username"
+                    name="username"
+                    placeholder="Enter your username"
+                    type="text"
+                    icon="👤"
+                   
+                  />
                   <InputWithIcon
                     title="Mobile Number"
                     name="mobileNumber"
                     placeholder="Enter your mobile number"
                     type="number"
                     icon="📱"
+                    
                   />
                   <PasswordInputWithIcon
                     title="Password"
@@ -162,20 +193,7 @@ const WorkerRegistration = () => {
                     placeholder="Enter your password"
                     canEdit
                     icon="🔒"
-                  />
-                </div>
-                <div className="w-1/2 px-20 space-y-10">
-                  <InputWithIcon
-                    title="Email"
-                    name="email"
-                    placeholder="Enter your email"
-                    type="email"
-                    icon="📧"
-                  />
-                  <DateInput
-                    title="Date of Birth"
-                    name="dateOfBirth"
-                    placeholder="Enter your date of birth"
+                  
                   />
                   <PasswordInputWithIcon
                     title="Confirm Password"
@@ -183,150 +201,183 @@ const WorkerRegistration = () => {
                     placeholder="Confirm your password"
                     canEdit
                     icon="🔒"
+                   
                   />
-                </div>
-              </div>
-              <div className="flex gap-24 items-center my-10 px-32">
-                <FileInput title="Profile Image" name="profileImage" />
-                <RadioButton
-                  title="Gender"
-                  name="gender"
-                  options={[
-                    { label: "Male", value: "male" },
-                    { label: "Female", value: "female" },
-                    { label: "Other", value: "other" },
-                  ]}
-                />
-              <div className="flex flex-col ">
-  <label htmlFor="expertiseIn" className="text-black">Expertise In</label>
-  <Field
-    as="select"
-    name="expertiseIn"
-    className="sign-up-input w-full bg-white text-black ps-2 border placeholder:text-sm border-yellow-300 h-10"
-  >
-    <option value="" disabled hidden>Select service</option>
-    {services.map((service) => (
-      <option key={service.serviceName} value={service.serviceId}>
-        {service.serviceName}
-      </option>
-    ))}
-  </Field>
-  <ErrorMessage
-    name="expertiseIn"
-    component="span"
-    className="text-sm text-red-500"
-  />
-</div>
-<div className="flex gap-20 mt-10">
-
-                <InputWithIcon
-                  title="Experience in years"
-                  name="experience"
-                  placeholder="Enter your experience"
-                  type="number"
-                  icon=""
+              <div className="flex">
+           <div className="w-[850px]">
+           <InputWithIcon
+                    title="Email"
+                    name="email"
+                    placeholder="Enter your email"
+                    type="email"
+                    icon="📧"
+                    onchange={(value: string) => {
+                      console.log(value, "value of email");
+                      setEmailValue(value);
+                    }}
+                   
                   />
-                <InputWithIcon
-                  title="Service Charge"
-                  name="serviceCharge"
-                  placeholder="Enter your service charge"
-                  type="number"
-                  icon=""
-                  />
+           </div>
+                  <div>
+                  {!verifyButtonClicked && !emailVerified && (
+          <button
+          type="button"
+            className="mt-8 ms-2 text-yellow-500"
+            onClick={handleVerifyEmailButtonClicked}
+          >
+            verify
+          </button>
+        )}
+        {emailVerified &&  <p className=" font-semibold text-sm mt-8 ms-2 text-green-400 " >Verified</p>}
+                 
                   </div>
               </div>
-              <p className="font-semibold ps-[700px] text-2xl text-black">
-                Address
-              </p>
-              <div className="w-full flex justify-between">
-                <div className="w-1/2 px-20 space-y-10">
+                   {verifyButtonClicked && (
+                    <>
+                    <div></div>
+                    <div className="">
+                      <OtpInput
+                       email={emailValue}
+                       setEmailVerified={setEmailVerified}
+                       setVerifyButtonClicked={setVerifyButtonClicked}
+                     />
+                    </div></>
+                   )}
+          
+                 
+                </div>
+
+                <div className="flex flex-col md:flex-row md:justify-between items-center md:gap-44 gap-10 mb-6">
+                  <FileInput title="Profile Image" name="profileImage"  />
+                  <RadioButton
+                    title="Gender"
+                    name="gender"
+                    options={[
+                      { label: "Male", value: "male" },
+                      { label: "Female", value: "female" },
+                      { label: "Other", value: "other" },
+                    ]}
+                  
+                  />
+                <div className="w-full">
+                <DateInput
+                    title="Date of Birth"
+                    name="dateOfBirth"
+                    placeholder="Enter your date of birth"
+                 
+                  />
+                </div>
+                </div>
+
+                <p className="font-semibold text-center text-2xl mb-6 text-black">Address</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   <InputWithIcon
                     title="House Name"
                     name="houseName"
                     placeholder="Enter your house name"
                     type="text"
-                    icon=""
+                   icon=""
                   />
-                </div>
-                <div className="w-1/2 px-20 space-y-10">
                   <InputWithIcon
                     title="Street"
                     name="street"
                     placeholder="Enter your street"
                     type="text"
-                    icon=""
+                   icon=""
                   />
-                </div>
-              </div>
-              <div className="flex w-full justify-between">
-                <div className="w-1/3 px-20 space-y-10">
                   <InputWithIcon
                     title="City"
                     name="city"
                     placeholder="Enter your city"
                     type="text"
-                    icon=""
+                 icon=""
                   />
-                </div>
-                <div className="w-1/3 px-20 space-y-10">
                   <InputWithIcon
                     title="State"
                     name="state"
                     placeholder="Enter your state"
                     type="text"
-                    icon=""
+                 icon=""
                   />
-                </div>
-                <div className="w-1/3 px-20 space-y-10">
                   <InputWithIcon
                     title="Pincode"
-                    name="pincode"
+                    name="pinCode"
                     placeholder="Enter your pincode"
                     type="number"
-                    icon=""
+                  icon=""
                   />
                 </div>
-              </div>
-              <div className="pt-10 px-20">
-                <TextArea
-                  title="About"
-                  name="about"
-                  placeholder="Tell us about yourself"
-                />
-              </div>
-            </div>
-            <div className="w-full px-56 pb-10 text-center mt-6">
-              <button
-                type="submit"
-                className="w-full py-3 bg-yellow-400 text-white font-semibold rounded-lg hover:bg-yellow-500"
-              >
-                Register
-              </button>
-            </div>
-          </Form> )}
-      </Formik>
-      <p className="text-sm text-gray-600 text-center mt-4">
-        Already Have an Account?{" "}
-        <button
-          onClick={()=>navigate('/login')}
-          className="text-blue-500 underline cursor-pointer focus:outline-none"
-        >
-          Login
-        </button>
-      </p>
-      <p className="text-sm text-gray-600 text-center mt-4 pb-10">
-        By clicking 'Continue', you acknowledge that you have read and accept
-        the{" "}
-        <a  className="text-blue-500 underline">
-          Terms of Service
-        </a>{" "}
-        and{" "}
-        <a  className="text-blue-500 underline">
-          Privacy Policy
-        </a>
-        .
-      </p>
-    </div>
+
+                <p className="font-semibold text-center text-2xl mb-6 text-black">Service Detail</p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                  <div className="w-full">
+                    <label htmlFor="expertiseIn" className="block text-black mb-1">Expertise In</label>
+                    <Field
+                      as="select"
+                      name="expertiseIn"
+                      className="w-full bg-white text-black border border-yellow-300 h-10 px-2 rounded-md"
+                    >
+                      <option value="" disabled hidden>Select service</option>
+                      {services.map((service) => (
+                        <option key={service.serviceId} value={service.serviceId}>
+                          {service.serviceName}
+                        </option>
+                      ))}
+                    </Field>
+                    <ErrorMessage name="expertiseIn" component="div" className="text-sm text-red-500 mt-1" />
+                  </div>
+                  <InputWithIcon
+                    title="Experience in years"
+                    name="experience"
+                    placeholder="Enter your experience"
+                    type="number"
+                   icon=""
+                  />
+                  <InputWithIcon
+                    title="Service Charge Per Hour"
+                    name="serviceCharge"
+                    placeholder="Enter your service charge"
+                    type="number"
+                  icon=""
+                  />
+                </div>
+
+                <div className="mb-6">
+                  <TextArea
+                    title="About"
+                    name="about"
+                    placeholder="Tell us about yourself"
+                  
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-3 bg-yellow-400 text-white font-semibold rounded-lg hover:bg-yellow-500 transition duration-200"
+                >
+                  Register
+                </button>
+              </Form>
+            )}
+          </Formik>
+
+          <p className="text-sm text-gray-600 text-center mt-4">
+            Already have an account?{" "}
+            <button
+              onClick={() => navigate("/login")}
+              className="text-blue-500 underline"
+            >
+              Login
+            </button>
+          </p>
+          <p className="text-sm text-gray-600 text-center mt-4 pb-10">
+            By clicking 'Continue', you acknowledge that you have read and accept
+            the <a href="#" className="text-blue-500 underline">Terms of Service</a> and{" "}
+            <a href="#" className="text-blue-500 underline">Privacy Policy</a>.
+          </p>
+        </div>
+      </div>
+    </>
   );
 };
 

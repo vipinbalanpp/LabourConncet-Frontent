@@ -5,6 +5,7 @@ import {
   faHardHat,
   faQuestionCircle,
   faSignOutAlt,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -30,10 +31,11 @@ const WorkerSidebar = () => {
   };
 
   return (
-    <div className="flex gap-x-10 h-screen">
-      <div className="w-1/5 sticky top-10 2xl:pb-10 scrollbar-hidden block h-screen scroll-smooth overflow-auto bg-gray-100 shadow-lg ">
-        <Logo color="black" />
-        <div className="flex flex-col items-center mt-8">
+    <div className="flex gap-x-10 bg-white">
+      <div className="w-1/5 h-screen sticky top-0 2xl:pb-10 scrollbar-hidden overflow-auto bg-gray-100 shadow-lg">
+      <div className="flex justify-center">
+            <Logo color="black" />
+          </div>        <div className="flex flex-col items-center mt-8">
           <div className="w-24 h-24 overflow-hidden rounded-full border-4 border-yellow-500">
             <img
               src={user?.profileImageUrl}
@@ -77,7 +79,7 @@ const WorkerSidebar = () => {
                     }`
                   }
                 >
-                  <FontAwesomeIcon icon={faChartBar} className="mr-2" />
+                  <FontAwesomeIcon icon={faUser} className="mr-2" />
                   Personal Info
                 </NavLink>
               </li>

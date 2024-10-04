@@ -18,7 +18,9 @@ const WorkerListing = () => {
   const [service, setService] = useState<Iservice | null>(null);
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
-
+  const [price, setPrice] = useState<string | null>(null);
+  const [experience , setExperience] = useState<string | null>(null)
+  const [filterApplied, setFilterApplied] = useState(false);
   useEffect(() => {
     fetchServiceDetails();
   }, []);
@@ -27,9 +29,16 @@ const WorkerListing = () => {
       fetchWorkerData();
     }
   }, [service, searchInput, currentPage]);
+  useEffect(() => {
+    if (!filterApplied) {
+      const radioButtons = document.querySelectorAll("input[type='radio']") as NodeListOf<HTMLInputElement>;
+      radioButtons.forEach((radio) => (radio.checked = false));
+    }
+  }, [filterApplied]);
+  
   const fetchServiceDetails = async () => {
     const { data } = await instance.get(
-      `user/api/v1/serviceDetail?serviceName=${serviceName}`
+      `service/api/v1/serviceDetail?serviceName=${serviceName}`
     );
     if (data) {
       setService(data);
@@ -43,6 +52,8 @@ const WorkerListing = () => {
       serviceId: service?.serviceId,
       searchInput,
       isBlocked: false,
+      priceSort: price,
+      experienceSort:experience
     };
     const workerResponse = await instance.get(`user/api/v1/getAllWorkers`, {
       params,
@@ -54,10 +65,32 @@ const WorkerListing = () => {
       console.log(totalPages, "toal nsuifdsflsdkjflskdfj");
     }
   };
+  const handlePriceSortChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPrice(e.target.value);
+    console.log(price);
+  };
+  const handleExperienceSortChange = (event:React.ChangeEvent<HTMLInputElement>) =>{
+    setExperience(event.target.value);
+  }
+    const handleFilter = () => {
+    fetchWorkerData();
+    setFilterApplied(true);
+    setCurrentPage(0);
+  };
+  const handleRemoveFilter = () => {
+    setPrice(null);
+    setExperience(null)
+    setFilterApplied(false)
+    setCurrentPage(1);
+
+  };
+  
 
   return (
     <>
-      <div className="px-44 ">
+          {workers.length > 0 && (
+            <>
+      <div className="px-44">
         <div className="flex justify-end w-full mt-10 p-5 hover:shadow-lg rounded-xl">
           <FaSearch className="text-2xl mt-3 text-black" />
           <input
@@ -65,42 +98,18 @@ const WorkerListing = () => {
             onChange={(e) => setSearchInput(e.target.value)}
             className="w-full  bg-white  border-b  pl-6  text-black"
             placeholder="Search for worker... "
-          />
+            />
         </div>
       </div>
-      {workers.length > 0 && (
-        <div className="flex bg-white ps-10">
-          <div className="border  mt-10 py-6  w-64 h-[580px]  shadow-2xl rounded-2xl">
+        <div className="flex bg-white ps-5">
+          <div className="border mt-10 py-6 w-64 h-[550px] shadow-2xl rounded-2xl">
             <p className="flex items-center text-black justify-center text-lg font-semibold mb-4">
               <FaFilter className="mr-2" />
               Filter
             </p>
             <hr />
-            <div className="my-8 ps-10">
-              <p className="text-sm font-medium text-gray-700 mb-2 ">
-                Distance
-              </p>
-              <ul className="space-y-3 mt-4">
-                <li className="text-sm text-gray-600 hover:text-blue-600 cursor-pointer">
-                  <input type="checkbox" className="border rounded p-1 mr-2" />
-                  Within 10 KMs
-                </li>
-                <li className="text-sm text-gray-600 hover:text-blue-600 cursor-pointer">
-                  <input type="checkbox" className="border rounded p-1 mr-2" />
-                  Within 20 KMs
-                </li>
-                <li className="text-sm text-gray-600 hover:text-blue-600 cursor-pointer">
-                  <input type="checkbox" className="border  rounded p-1 mr-2" />
-                  Within 30 KMs
-                </li>
-                <li className="text-sm text-gray-600 hover:text-blue-600 cursor-pointer">
-                  <input type="checkbox" className="border rounded p-1 mr-2" />
-                  Above 30KMs
-                </li>
-              </ul>
-            </div>
             <div className="ps-10">
-              <p className="text-sm font-medium  text-gray-700">Rating</p>
+              <p className="text-sm font-medium text-gray-700">Rating</p>
               <ul className="space-y-3 mt-4">
                 <li className="flex gap-3 text-xl text-yellow-500">
                   <input type="checkbox" className="border rounded p-1 mr-2" />
@@ -131,15 +140,15 @@ const WorkerListing = () => {
                 </li>
                 <li className="flex gap-3 text-xl text-gray-300">
                   <input type="checkbox" className="border rounded p-1 mr-2" />
-                  <FaStar className=" text-yellow-500" />
-                  <FaStar className=" text-yellow-500" />
+                  <FaStar className="text-yellow-500" />
+                  <FaStar className="text-yellow-500" />
                   <FaStar />
                   <FaStar />
                   <FaStar />
                 </li>
                 <li className="flex gap-3 text-xl text-gray-300">
                   <input type="checkbox" className="border rounded p-1 mr-2" />
-                  <FaStar className=" text-yellow-500" />
+                  <FaStar className="text-yellow-500" />
                   <FaStar />
                   <FaStar />
                   <FaStar />
@@ -147,19 +156,104 @@ const WorkerListing = () => {
                 </li>
               </ul>
             </div>
-            <div className="flex justify-end pe-5 mt-5">
-              <button className="bg-yellow-400 text-white rounded-[7px] text-sm py-1 px-3 font-semibold">
-                Apply
-              </button>
+            <div className="pt-10">
+              <hr className="mb-4" />
+              <p className="flex items-center text-black justify-center text-lg font-semibold mb-4">
+                <FaSort className="mr-2" />
+                Sort
+              </p>
+              <hr className="mt-4" />
+            </div>
+            <div className="flex gap-8 justify-between p-4">
+            <div className="flex flex-col space-y-2">
+                <p className="text-sm  text-gray-700 text-center font-bold">Price</p>
+                <label
+                  htmlFor="lowToHigh"
+                  className="text-xs font-medium text-gray-700 flex items-center"
+                  >
+                  <input
+                    type="radio"
+                    name="price"
+                    id="lowToHigh"
+                    className="mr-2"
+                    value="lowToHigh"
+                    onChange={handlePriceSortChange}
+                    />
+                  Low to High
+                </label>
+                <label
+                  htmlFor="highToLow"
+                  className="text-xs font-medium text-gray-700 flex items-center"
+                  >
+                  <input
+                    type="radio"
+                    name="price"
+                    id="highToLow"
+                    value="highToLow"
+                    className="mr-2"
+                    onChange={handlePriceSortChange}
+                    />
+                  High to Low
+                </label>
+              </div>
+              <div className="flex flex-col space-y-2 ">
+                <p className="text-sm  text-gray-700 text-center font-bold">Experience</p>
+                <label
+                  htmlFor="lowToHigh"
+                  className="text-xs font-medium text-gray-700 flex items-center"
+                >
+                  <input
+                    type="radio"
+                    name="experience"
+                    id="lowToHigh"
+                    className="mr-2"
+                    value="lowToHigh"
+                    onChange={handleExperienceSortChange}
+                    />
+                  Low to High
+                </label>
+                <label
+                  htmlFor="highToLow"
+                  className="text-xs font-medium text-gray-700 flex items-center"
+                >
+                  <input
+                    type="radio"
+                    name="experience"
+                    id="highToLow"
+                    value="highToLow"
+                    className="mr-2"
+                    onChange={handleExperienceSortChange}
+                  />
+                  High to Low
+                </label>
+              </div>
+            </div>
+            <div className="flex justify-center w-full px-3 mt-10">
+              {!filterApplied ? (
+                <button
+                  onClick={handleFilter}
+                  className="bg-yellow-400 text-white rounded-[7px] w-full text-sm py-1 px-3 font-semibold"
+                  >
+                  Apply
+                </button>
+              ) : (
+                <button
+                  onClick={handleRemoveFilter}
+                  className="bg-red-400 text-white rounded-[7px] w-full text-sm py-1 px-3 font-semibold"
+                  >
+                  Remove filter
+                </button>
+              )}
             </div>
           </div>
 
-          <div className={` w-4/5 flex-wrap flex gap-16 ps-20 pt-10  bg-white`}>
+          <div className={` w-4/5   flex flex-wrap gap-11 ps-10 pt-10  bg-white`}>
             {workers.map((worker) => (
               <Worker key={worker.id} worker={worker} />
             ))}
           </div>
         </div>
+          </>
       )}
       {workers.length === 0 && (
         <div className="flex items-center justify-center w-full min-h-screen bg-gray-50">
@@ -180,7 +274,10 @@ const WorkerListing = () => {
               {!searchInput && (
                 <span>
                   {" "}
-                  service <span className="text-lg text-yellow-400 font-semibold">{serviceName}</span>
+                  service{" "}
+                  <span className="text-lg text-yellow-400 font-semibold">
+                    {serviceName}
+                  </span>
                 </span>
               )}
               .

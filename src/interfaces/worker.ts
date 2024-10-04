@@ -1,7 +1,9 @@
 import { Iservice } from "./admin";
+import { IAddress } from "./user";
 
 export interface IWorkerCredentials {
-  fullname: string;
+  fullName: string;
+  username: string
   mobileNumber: string;
   email: string;
   password: string;
@@ -9,8 +11,8 @@ export interface IWorkerCredentials {
   street: string;
   city: string;
   state: string;
-  pincode: string;
-  expertiseIn: number;
+  pinCode: string;
+  serviceId: number;
   experience: number;
   serviceCharge: number;
   about: string;
@@ -21,13 +23,7 @@ export interface IWorkerCredentials {
 export interface IWorkerDetailsForStore {
   about: string;
   id:string
-  address: {
-    houseName: string;
-    street: string;
-    city: string;
-    state: string;
-    pincode: string;
-  };
+  address:IAddress
 
   email: string;
 

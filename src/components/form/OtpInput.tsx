@@ -1,4 +1,3 @@
-// src/components/OtpInput.js
 
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -50,30 +49,45 @@ const OtpInput = ({ email, setEmailVerified, setVerifyButtonClicked }: propType)
   };
 
   return (
-    <div className="flex  items-center gap-5 mb-10">
-      <h1 className="text-black ps-6">Enter OTP</h1>
-      <input
-        ref={otpInput}
-        maxLength={4}
-        value={otpValue}
-        onChange={handleChange}
-        className="h-8 w-20 border bg-white border-yellow-300 ps-2 text-black"
-        disabled={otpExpired}
-      />
-      {otpExpired ? (
-        <button className="text-black" onClick={handleResendOtp}>
-          Resend
-        </button>
-      ) : (
-         (
-          <button className="text-black" onClick={handleVerification}>
-            Verify
-          </button>
-        )
-      )}
-     {!otpExpired && <OtpTimer initialTime={120} onTimerComplete={handleTimerComplete} />} 
-     
+    <div className="flex flex-col md:flex-row items-center gap-5 mb-10 p-4 bg-white rounded-lg">
+  <h1 className="text-lg md:text-md font-semibold text-gray-800">Enter OTP</h1>
+  
+  <div className="flex items-center gap-4">
+    <input
+      ref={otpInput}
+      maxLength={4}
+      value={otpValue}
+      onChange={handleChange}
+      className="h-8 w-20  bg-white rounded-xl border px-4 text-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-300 transition duration-300 ease-in-out"
+      disabled={otpExpired}
+    />
+    
+    {otpExpired ? (
+      <button 
+        type="button" 
+        className="bg-yellow-500 border text-white font-semibold py-2 px-4 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out"
+        onClick={handleResendOtp}
+      >
+        Resend
+      </button>
+    ) : (
+      <button 
+        type="button" 
+        className="bg-blue-500 text-white font-semibold py-1 px-4 rounded-xl hover:bg-blue-600 transition duration-300 ease-in-out"
+        onClick={handleVerification}
+      >
+        Verify
+      </button>
+    )}
+  </div>
+
+  {!otpExpired && (
+    <div className="mt-4 md:mt-0">
+      <OtpTimer initialTime={120} onTimerComplete={handleTimerComplete} />
     </div>
+  )}
+</div>
+
   );
 };
 

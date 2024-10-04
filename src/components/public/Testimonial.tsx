@@ -3,7 +3,7 @@ import user from "../../assets/user.png"
 
 const Testimonial = () => {
   return (
-    <div className="w-[450px] md:w-[400px] rounded-3xl h-[250px] bg-white hover:scale-105 duration-300 hover:shadow-xl mt-10  cursor-pointer hover:rounded-md  shadow-md ">
+    <div data-aos="zoom-in" data-aos-duration="1000" className="w-[450px] md:w-[400px] rounded-3xl h-[250px] bg-white hover:scale-105 duration-300 hover:shadow-xl mt-10 hover:rounded-3xl  cursor-pointer  shadow-md ">
       <div className="flex gap-4 pt-4 ps-8">
         <FaStar className="text-yellow-500 text-2xl"/>
         <FaStar className="text-yellow-500 text-2xl"/>

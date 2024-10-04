@@ -33,7 +33,7 @@ const[currentPage,setCurrentPage] = useState(1)
 useEffect(() => {
   const fetchData = async() => {
     try {
-      const serviceResponse = await instance.get(`user/api/v1/get-all-services?pageNumber=${currentPage - 1}&pageSize=8&searchInput=${searchInput}`);
+      const serviceResponse = await instance.get(`service/api/v1/get-all-services?pageNumber=${currentPage - 1}&pageSize=8&searchInput=${searchInput}`);
       setServices(serviceResponse.data.services);
       setTotalPages(serviceResponse.data.totalNumberOfPages);      
     } catch (error) {
@@ -75,11 +75,11 @@ useEffect(() => {
          const imageResponse = await   axios.post('https://api.cloudinary.com/v1_1/dnue064gc/image/upload',formData)
          const serviceCredentials:Iservice = {
           serviceName,
-          logo:imageResponse.data.secure_url,
+          image:imageResponse.data.secure_url,
           description
         } 
           try{
-            await instance.post("/user/api/v1/create-service",serviceCredentials)
+            await instance.post("/service/api/v1/create-service",serviceCredentials)
             toast.success('Service created successfully')
             setImage(null)
             setServiceName('')
@@ -94,7 +94,7 @@ useEffect(() => {
           try{
             const serviceDataForEditing = {
               serviceName:serviceName ? serviceName : serviceToBeEdited?.serviceName,
-              logo:image? image : serviceToBeEdited?.logo,
+              logo:image? image : serviceToBeEdited?.image,
               description:description ? description : serviceToBeEdited?.description
             }
             if(image){
@@ -108,7 +108,7 @@ useEffect(() => {
                  }
                  serviceDataForEditing.logo = imageResponse.data.secure_url
             }
-            await instance.put(`/user/api/v1/edit-service?serviceName=${serviceToBeEdited?.serviceName}`,serviceDataForEditing)
+            await instance.put(`/service/api/v1/edit-service?serviceName=${serviceToBeEdited?.serviceName}`,serviceDataForEditing)
             toast.success('Service edited successfully')
             setImage(null)
             setCurrentPage(1)
@@ -127,10 +127,10 @@ useEffect(() => {
         <div className="flex justify-end mr-24">
           <div className="flex mt-10">
           <button
-            className="border bg-[rgb(234,179,8)]  px-3 me-5 rounded-[10px] text-white font-semibold flex"
+            className="border bg-[rgb(234,179,8)]  px-5 py-2 me-5 rounded-[10px] text-white font-semibold flex justify-center"
             onClick={() => setIsModalOpen(true)}
           >
-           <FaPlus className="text-sm mt-2" />
+           <FaPlus className="text-sm mt-[6px] me-2" />New
           </button>
             <input onChange={(e) =>setSearchInput(e.target.value)} className="bg-white border border-black me-1" type="text" />
           </div>
@@ -162,7 +162,7 @@ useEffect(() => {
               {services?.map((service) => (
                 <TableRow key={service.serviceName} className="bg-white">
                     <TableCell component="th" scope="row" className="text-base">
-                    <img className="w-11 rounded-full h-11" src={service.logo} alt="" />
+                    <img className="w-32" src={service.image} alt="" />
                   </TableCell>
                   <TableCell component="th" scope="row" className="text-base">
                     {service.serviceName}
@@ -277,7 +277,7 @@ useEffect(() => {
                   />
                 ) : (
                   <img
-                  src={serviceToBeEdited?.logo}
+                  src={serviceToBeEdited?.image}
                   alt="Uploaded"
                   className="object-cover w-full h-full"
                 />

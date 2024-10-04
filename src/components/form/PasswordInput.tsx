@@ -20,7 +20,7 @@ const PasswordInputWithIcon = ({ title, name, icon, placeholder, canEdit }: Pass
   return (
     <div className="mb-5">
       <p>
-        <label className="text-black ps-5" >{title}</label>
+        <label className="text-black ps-5 font-semibold" >{title}</label>
       </p>
       <div className="relative flex items-center">
         <div className="sign-up-icon">{icon}</div>

@@ -1,13 +1,14 @@
 import Help from "../../components/public/Help"
-import UserSidebar from "../../components/user/UserSidebar"
 
 
 const HelpCenter = () => {
     return (
-        <div className="flex">
-            <UserSidebar/>
+        <div className="mx-20 mt-24 mb-44">
+ 
             <Help/>
         </div>
+        
+      
     )
 }
 

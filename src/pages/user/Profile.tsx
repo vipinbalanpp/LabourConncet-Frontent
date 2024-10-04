@@ -30,7 +30,7 @@ const Profile = () => {
     street: '',
     city:'',
     state: '',
-    pincode: '',
+    pinCode: '',
   });
   useEffect(() =>{
       if(user?.address){
@@ -42,7 +42,7 @@ const Profile = () => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = event.target;
-      if(name === 'pincode') {
+      if(name === 'pinCode') {
         if (!/^\d{6}$/.test(value)) {
           setAddressError('Pincode must be  6 digits.') 
         }else{
@@ -138,8 +138,7 @@ const handleChangeProfileImage = () =>{
 }
   return (
     <>
-      <div className="flex">
-        <UserSidebar />
+    
         <div className=" pt-28 px-28 w-full">
           <div className="flex gap-5">
             <p
@@ -262,7 +261,7 @@ const handleChangeProfileImage = () =>{
                     <div className="shadow-lg ps-10 hover:scale-105 duration-300 pt-10 hover:shadow-xl space-y-2">
                     <p className="text-black">{user?.address?.houseName}</p>
                     <p className="text-black">{user?.address?.street} ,<span> {user?.address?.city}</span></p>
-                    <p className="text-black"> {user?.address?.state} - <span> {user?.address?.pincode}</span></p>
+                    <p className="text-black"> {user?.address?.state} - <span> {user?.address?.pinCode}</span></p>
                     <button
                       className="hover:rounded-3xl duration-300 text-yellow-500 px-5 py-3 rounded-xl mt-4"
                       onClick={()=>setEditAddressModalIsOpen(true)}
@@ -294,9 +293,7 @@ const handleChangeProfileImage = () =>{
            <LoginInfo/>
           )}
         </div>
-      </div>
-      <Footer />
-      <ReactModal
+          <ReactModal
         isOpen={addAdrressModalIsOpen}
         onRequestClose={() => setAddAdrressModalIsOpen(false)}
         className="fixed inset-0 flex items-center justify-center z-50 py-5"
@@ -346,7 +343,7 @@ const handleChangeProfileImage = () =>{
                  <label className="text-black">Pincode</label>
                 <input
                   type="number"
-                  name="pincode"
+                  name="pinCode"
                   className="bg-white w-full border text-black border-yellow-400 p-2 m-2"
                   placeholder="Enter your city"
                   onChange={handleInputChange}
@@ -424,9 +421,9 @@ const handleChangeProfileImage = () =>{
                  <label className="text-black">Pincode</label>
                 <input
                   type="number"
-                  name="pincode"
+                  name="pinCode"
                   className="bg-white w-full border text-black border-yellow-400 p-2 m-2"
-                  placeholder={user?.address.pincode}
+                  placeholder={user?.address.pinCode}
                   onChange={handleInputChange}
                 />
               </>

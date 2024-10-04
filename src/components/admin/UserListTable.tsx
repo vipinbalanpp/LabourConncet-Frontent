@@ -34,6 +34,12 @@ const UserListTable: React.FC<UserListTableProps> = ({ users, onBlockUser }) => 
         onBlockUser(selectedUserEmail)
         setBlockModalIsOpen(false)
       }
+      console.log('this is log',unBlockModalIsOpen);
+      if(unBlockModalIsOpen){
+        
+        onBlockUser(selectedUserEmail)
+        setUnBlockModalIsOpen(false)
+      }
   }
 
   return (
@@ -121,7 +127,11 @@ const UserListTable: React.FC<UserListTableProps> = ({ users, onBlockUser }) => 
           Enter the reason for blocking
         </label>
         <input
-        onChange={(e) => setReason(e.target.value)}
+        onChange={(e) => {
+          console.log(e.target.value);
+          setReason(e.target.value)
+          
+        }}
           type="text"
           id="blockReason"
           placeholder="Reason.."
@@ -138,7 +148,7 @@ const UserListTable: React.FC<UserListTableProps> = ({ users, onBlockUser }) => 
           </button>
           <button
             className="bg-red-500 text-white rounded px-4 py-2 transition-colors duration-200"
-            onClick={() => handleBlock}
+            onClick={() => handleBlock()}
           >
             Confirm
           </button>
@@ -153,7 +163,7 @@ const UserListTable: React.FC<UserListTableProps> = ({ users, onBlockUser }) => 
       >
         <div className="bg-white rounded-xl p-6 w-96 shadow-lg">
         <h2 className="text-2xl font-bold mb-4 text-gray-800">Confirm Action</h2>
-        <p className="mb-4 text-black">Are you sure you want to block this user?</p>
+        <p className="mb-4 text-black">Are you sure you want to unblock this user?</p>
           <div className="flex justify-end mt-4 space-x-2">
             <Button
               className="bg-gray-500 text-white rounded px-4 py-2"
@@ -163,7 +173,7 @@ const UserListTable: React.FC<UserListTableProps> = ({ users, onBlockUser }) => 
               </Button>
             <Button
               className="bg-blue-500 text-white rounded px-4 py-2"
-              onClick={() => handleBlock}
+              onClick={() => handleBlock()}
             >
               Confirm
             </Button>

@@ -2,7 +2,7 @@
 export interface Iservice {
   serviceId?:number
     serviceName: string
-    logo: string
+    image: string
     description: string
     workers?:{}[]
 }

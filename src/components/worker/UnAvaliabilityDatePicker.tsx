@@ -6,9 +6,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import Modal from "react-modal";
 
-// Set the app element for react-modal
-Modal.setAppElement('#root'); // Assuming your root element has id 'root'
-
 const UnAvailabilityDatePicker = () => {
   const [unavailable, setUnavailable] = useState<Date[]>([]);
   const [bookedDates, setBookedDates] = useState<Date[]>([]);
@@ -17,42 +14,44 @@ const UnAvailabilityDatePicker = () => {
   const user = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
-    const fetchAvailabilityDates = async () => {
-      try {
-        const response = await instance.get(
-          `booking/api/v1/get-availability-dates?workerId=${user?.id}`
-        );
-        setBookedDates(
-          response.data.bookedDates.map(
-            (dateString: string) => new Date(dateString)
-          )
-        );
-        if (response.data.unavailableDates) {
-          setUnavailable(
-            response.data.unavailableDates.map(
-              (dateString: string) => new Date(dateString)
-            )
-          );
-        }
-        console.log(response);
-      } catch (error) {
-        console.error("Error fetching availability dates:", error);
-      }
-    };
-
     fetchAvailabilityDates();
   }, [user?.id]);
 
-  const handleDateChange = (date: Date) => {
-    setSelectedDates((prevSelectedDates) => {
-      if (
-        prevSelectedDates.some((d) => d.toDateString() === date.toDateString())
-      ) {
-        return prevSelectedDates.filter(
-          (d) => d.toDateString() !== date.toDateString()
+  const fetchAvailabilityDates = async () => {
+    try {
+      const response = await instance.get(
+        `booking/api/v1/get-availability-dates?workerId=${user?.id}`
+      );
+      setBookedDates(
+        response.data.bookedDates.map(
+          (dateString: string) => new Date(dateString)
+        )
+      );
+      if (response.data.unavailableDates) {
+        setUnavailable(
+          response.data.unavailableDates.map(
+            (dateString: string) => new Date(dateString)
+          )
         );
       }
-      return [date, ...prevSelectedDates];
+      console.log(response);
+    } catch (error) {
+      console.error("Error fetching availability dates:", error);
+    }
+  };
+
+  const handleDateChange = (date: Date) => {
+    // Create a new date object that only includes the year, month, and day
+    const newDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    setSelectedDates((prevSelectedDates) => {
+      if (
+        prevSelectedDates.some((d) => d.toDateString() === newDate.toDateString())
+      ) {
+        return prevSelectedDates.filter(
+          (d) => d.toDateString() !== newDate.toDateString()
+        );
+      }
+      return [newDate, ...prevSelectedDates];
     });
     console.log(selectedDates);
   };
@@ -154,7 +153,7 @@ const UnAvailabilityDatePicker = () => {
               minDate={new Date()}
             />
 
-            <div className=" mt-4 ms-10 space-y-5">
+            <div className=" mt-4 ms-10 space-y-3">
               <div className="flex">
                 <div className="w-3 h-3  bg-blue-400 rounded-full"></div>
                 <p className="text-xs font-semibold text-black ml-2">Booked Dates</p>
@@ -170,12 +169,13 @@ const UnAvailabilityDatePicker = () => {
               
               {selectedDates.length > 0 && (
                 <div >
-                  <button
-                    className="text-sm px-3 py-2 bg-yellow-400   rounded-xl text-white font-semibold  hover:bg-yellow-500  duration-300"
-                    onClick={handleSaveClick}
-                  >
-                    Save Selected
-                  </button>
+                 <button
+  className="px-2 py-1 text-sm mt-32 font-semibold text-white bg-yellow-500 border border-yellow-500 rounded-xl shadow-md hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2"
+  onClick={handleSaveClick}
+>
+  Save Selected
+</button>
+
                 </div>
               )}
             </div>
@@ -184,43 +184,44 @@ const UnAvailabilityDatePicker = () => {
       </div>
 
       <Modal
-        isOpen={isModalOpen}
-        onRequestClose={handleCancel}
-        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+  isOpen={isModalOpen}
+  onRequestClose={handleCancel}
+  className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+>
+  <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-xl">
+    <h2 className="text-xl text-center font-semibold mb-6 text-gray-800">
+      Confirm Unavailability Dates
+    </h2>
+    <div className="p-6 bg-gray-100 rounded-lg shadow-inner">
+      <p className="text-lg font-semibold mb-4 text-gray-700">Selected Dates:</p>
+      <ul className="mb-4 max-h-60 overflow-y-auto list-disc list-inside pl-5">
+        {selectedDates.map((date, index) => (
+          <li key={index} className="text-lg text-gray-700">
+            {date.toDateString()}
+          </li>
+        ))}
+      </ul>
+    </div>
+    <p className="text-lg text-gray-700 font-semibold mt-6">
+      Are you sure you want to mark these dates as unavailable?
+    </p>
+    <div className="flex justify-end space-x-6 mt-8">
+      <button
+        onClick={handleCancel}
+        className="px-10   font-semibold text-red-600 border border-red-600 rounded-xl hover:bg-red-50 transition duration-300"
       >
-        <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-lg">
-          <h2 className="text-2xl text-center font-semibold mb-4">
-            Confirm Unavailability Dates
-          </h2>
-          <div className="p-10">
-            <p>Selected Dates:</p>
-            <ul className="mb-4 max-h-60 overflow-y-auto">
-              {selectedDates.map((date, index) => (
-                <li key={index} className="text-lg text-gray-700">
-                  {date.toDateString()}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <p className="text-black font-semibold">
-            Are you sure want to make these dates as unavailable dates ?
-          </p>
-          <div className="flex justify-end space-x-4 pt-10">
-            <button
-              onClick={handleCancel}
-              className="px-4 py-2  text-red-500  font-semibold rounded-md  transition-colors duration-300"
-            >
-              No
-            </button>
-            <button
-              onClick={handleConfirm}
-              className="px-4 py-2  text-blue-500 font-semibold rounded-md  transition-colors duration-300"
-            >
-              Yes
-            </button>
-          </div>
-        </div>
-      </Modal>
+        No
+      </button>
+      <button
+        onClick={handleConfirm}
+         className="px-10 py-1  font-semibold text-blue-600 border border-blue-600 rounded-xl hover:bg-blue-50 transition duration-300"
+      >
+        Yes
+      </button>
+    </div>
+  </div>
+</Modal>
+
     </>
   );
 };

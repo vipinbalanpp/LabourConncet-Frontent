@@ -1,9 +1,8 @@
-import { number } from "yup";
-import { Iservice } from "./admin";
 import { IWorkerDetailsForStore } from "./worker";
 
 export interface IUserCredentials {
   fullName: string;
+  username: string;
   email: string;
   password: string;
   role: string;
@@ -13,16 +12,15 @@ export interface ILoginData {
   password: string;
 }
 export interface IAddress {
-  houseName:string
-  street:string
-  city:string
-  state:string
-  pincode:string
-
+  houseName: string;
+  street: string;
+  city: string;
+  state: string;
+  pinCode: string;
 }
 export interface IUserDetailsForStore {
-  id:string
-  address:IAddress ;
+  id: string;
+  address: IAddress;
   email: string;
   fullName: string;
   profileImageUrl: string;
@@ -35,22 +33,24 @@ export interface UserListTableProps {
   onBlockUser: (email: string) => void;
 }
 export interface IBooking {
-  id:string
-  user:IUserDetailsForStore
-  worker:IWorkerDetailsForStore
-  workDescription:string
-  bookingDate:Date
-  workDate:Date
-  status:string
-  serviceCharge:number
-  cancellationReason:string
-  cancelledBy:string
-  workLocationAddress:IAddress
+  id: string;
+  user: IUserDetailsForStore;
+  worker: IWorkerDetailsForStore;
+  workDescription: string;
+  bookingDate: Date;
+  workDate: Date;
+  status: string;
+  serviceCharge: number;
+  cancellationReason: string;
+  cancelledBy: string;
+  workLocationAddress: IAddress;
+  reasonForRejection: string;
+  rescheduleRequestedDate: Date;
 }
-export interface DecodedToken{
-  name:string
-  email:string
+export interface DecodedToken {
+  name: string;
+  email: string;
 }
-export interface IResult{
-    error:string
+export interface IResult {
+  error: string;
 }

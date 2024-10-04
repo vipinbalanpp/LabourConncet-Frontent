@@ -36,7 +36,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
                 <button
                     onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
                     disabled={currentPage === 1}
-                    className="px-3 py-1 font-semibold text-sm rounded-[7px] mr-2"
+                    className="px-3 py-1 font-semibold border text-sm rounded-[7px] mr-2"
                 >
                     <svg 
                         xmlns="http://www.w3.org/2000/svg" 
@@ -63,7 +63,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
                 <button
                     onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
                     disabled={currentPage === totalPages}
-                    className="px-3 py-1 font-semibold text-sm rounded-[7px] ml-2"
+                    className="px-3 py-1 border  font-semibold text-sm rounded-[7px] ml-2"
                 >
                     <svg 
                         xmlns="http://www.w3.org/2000/svg" 

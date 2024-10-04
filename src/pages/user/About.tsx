@@ -1,10 +1,10 @@
-import Banner from "../../components/landing/Banner"
+import About from "../../components/landing/About"
 
 
-const About = () => {
+const AboutPage = () => {
     return (
-            <Banner/>
+            <About/>
     )
 }
 
-export default About
+export default AboutPage

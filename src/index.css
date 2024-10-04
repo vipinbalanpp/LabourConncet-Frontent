@@ -69,4 +69,10 @@ html{
   .larger-datepicker-container .react-datepicker__navigation {
     top: 1rem;
   }
+
+  body{
+    @apply h-screen bg-white
+  }
+  
+
   
