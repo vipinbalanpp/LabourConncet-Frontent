@@ -100,9 +100,12 @@ function App() {
 
         {/* ADMIN ROUTES  */}
 
-        <Route path="admin"   element={
+        <Route
+          path="admin"
+          element={
             <ProtectedRoute element={<AdminSidebar />} requiredRole="ADMIN" />
-          }>
+          }
+        >
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="users-list" element={<UsersList />} />
           <Route path="workers-list" element={<WorkersList />} />
@@ -117,41 +120,13 @@ function App() {
             <ProtectedRoute element={<WorkerSidebar />} requiredRole="WORKER" />
           }
         >
-          <Route
-            path="dashboard"
-            element={
-           <WorkerDashBoard />}
-            
-          />
-          <Route
-            path="profile"
-            element={
-           <WorkerProfile />}
-          
-          />
+          <Route path="dashboard" element={<WorkerDashBoard />} />
+          <Route path="profile" element={<WorkerProfile />} />
 
-          <Route
-            path="bookings"
-            element={
-           <MyBookings />} 
-          />
-          <Route
-            path="messages"
-            element={
-           <MessagesOfWorker />}
-              
-          />
-          <Route
-            path="help"
-            element={
-          <WHelpCenter />} 
-          />
-          <Route
-            path="notifications"
-            element={
-          <Notifications />}
-             
-          />
+          <Route path="bookings" element={<Bookings />} />
+          <Route path="messages" element={<MessagesOfWorker />} />
+          <Route path="help" element={<WHelpCenter />} />
+          <Route path="notifications" element={<Notifications />} />
         </Route>
       </Routes>
 

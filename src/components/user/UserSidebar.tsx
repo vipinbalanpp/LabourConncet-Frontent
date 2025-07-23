@@ -32,7 +32,7 @@ const UserSidebar = () => {
   return (
     <div className="flex bg-white">
       <div className="w-72 h-screen bg-white sticky top-0 overflow-y-auto  shadow-lg">
-        <div className="bg-gray-100 h-full py-5">
+        <div className="bg-gray-100 h-full  ">
           <div className="flex justify-center">
             <Logo color="black" />
           </div>

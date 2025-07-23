@@ -12,9 +12,7 @@ const TestMonialList = () => {
         <Testimonial />
       </div>
       <div className="flex justify-center md:justify-end mt-5">
-        <button className="pt-2 text-sm text-yellow-500 h-10">
-          View All
-        </button>
+        <button className="pt-2 text-sm text-yellow-500 h-10">View All</button>
       </div>
     </div>
   );

@@ -45,6 +45,7 @@ export interface IBooking {
   cancelledBy: string;
   workLocationAddress: IAddress;
   reasonForRejection: string;
+  rescheduleRequestedBy: string;
   rescheduleRequestedDate: Date;
 }
 export interface DecodedToken {

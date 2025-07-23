@@ -189,54 +189,32 @@ const WorkerProfile = () => {
     <>
       <div className="flex">
         <div className="min-h-screen mt-10">
-        <Tabs
-      value={profileInfo}
-      onChange={handleTabChange}
-      aria-label="secondary"
-    >
-       <Tab
-        value="profile"
-        label="My Profile"
-        className="font-bold text-yellow-600 hover:text-yellow-600 focus:text-yellow-600 transition-colors duration-200"
-      />
-      <Tab
-        value="login-info"
-        label="Login Info"
-        className="font-bold text-yellow-600 hover:text-yellow-600 focus:text-yellow-600 transition-colors duration-200"
-      />
-      <Tab
-        value="availability"
-        label="Availability"
-        className="font-bold text-yellow-600 hover:text-yellow-600 focus:text-yellow-600 transition-colors duration-200"
-      />
-      <Tab
-        value="work"
-        label="Works"
-        className="font-bold text-yellow-600 hover:text-yellow-600 focus:text-yellow-600 transition-colors duration-200"
-      />
-    </Tabs>
-  {/* <button 
-onClick={() => setProfileInfo('profile')}
-  className={`px-4  font-bold   me-1  rounded transition-colors duration-300 ${profileInfo === 'profile' ? 'border-b-4 border-yellow-500':''}`}>
- MY PROFILE
-  </button>
-  <button
-onClick={() => setProfileInfo('login-info')}
-  className={`px-4   font-bold  me-1  rounded transition-colors duration-300 ${profileInfo === 'login-info' ? 'border-b-4 border-yellow-500':''}`}>
-   LOGIN INFO
-    </button>
-  <button
-onClick={() => setProfileInfo('availability')}
-  className={`px-4  font-bold  me-1  rounded transition-colors duration-300 ${profileInfo === 'availability' ? 'border-b-4 border-yellow-500':''}`}>
-    AVAILABILITY
-    </button>
-  <button 
-  onClick={() => setProfileInfo('works')}
-  className={`px-4   font-bold   me-1  rounded transition-colors duration-300 ${profileInfo === 'works' ? 'border-b-4 border-yellow-500':''}`}>
-    WORKS
-    </button> */}
-
-
+          <Tabs
+            value={profileInfo}
+            onChange={handleTabChange}
+            aria-label="secondary"
+          >
+            <Tab
+              value="profile"
+              label="My Profile"
+              className="font-bold text-yellow-600 hover:text-yellow-600 focus:text-yellow-600 transition-colors duration-200"
+            />
+            <Tab
+              value="login-info"
+              label="Login Info"
+              className="font-bold text-yellow-600 hover:text-yellow-600 focus:text-yellow-600 transition-colors duration-200"
+            />
+            <Tab
+              value="availability"
+              label="Availability"
+              className="font-bold text-yellow-600 hover:text-yellow-600 focus:text-yellow-600 transition-colors duration-200"
+            />
+            <Tab
+              value="work"
+              label="Works"
+              className="font-bold text-yellow-600 hover:text-yellow-600 focus:text-yellow-600 transition-colors duration-200"
+            />
+          </Tabs>
           {profileInfo === "profile" ? (
             <div>
               <div className="flex gap-56 pt-20">
@@ -252,11 +230,13 @@ onClick={() => setProfileInfo('availability')}
               <div className="flex gap-56 pt-10">
                 <div>
                   <p className="font-bold">Mobile</p>
-                  <p className="text-black">{ user?.mobileNumber}</p>
+                  <p className="text-black">{user?.mobileNumber}</p>
                 </div>
                 <div>
                   <p className="font-bold">Date Of Birth</p>
-                  <p className="text-black">{format(new Date(user?.dateOfBirth),"PPP")}</p>
+                  <p className="text-black">
+                    {format(new Date(user?.dateOfBirth), "PPP")}
+                  </p>
                 </div>
                 <div>
                   <p className="font-bold">Email</p>

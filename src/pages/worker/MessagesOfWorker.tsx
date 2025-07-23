@@ -1,8 +1,7 @@
+import Messages from "../../components/public/Messages";
+
 const MessagesOfWorker = () => {
-  return (
-    // <Messages/>
-    <p></p>
-  );
+  return <Messages />;
 };
 
 export default MessagesOfWorker;

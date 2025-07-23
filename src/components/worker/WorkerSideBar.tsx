@@ -27,15 +27,16 @@ const WorkerSidebar = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate("/login"); 
+    navigate("/login");
   };
 
   return (
-    <div className="flex gap-x-10 bg-white">
-      <div className="w-1/5 h-screen sticky top-0 2xl:pb-10 scrollbar-hidden overflow-auto bg-gray-100 shadow-lg">
-      <div className="flex justify-center">
-            <Logo color="black" />
-          </div>        <div className="flex flex-col items-center mt-8">
+    <div className="flex  bg-white">
+      <div className="w-72 h-screen sticky top-0 2xl:pb-10 scrollbar-hidden overflow-auto bg-gray-100 shadow-lg">
+        <div className="flex justify-center">
+          <Logo color="black" />
+        </div>{" "}
+        <div className="flex flex-col items-center mt-8">
           <div className="w-24 h-24 overflow-hidden rounded-full border-4 border-yellow-500">
             <img
               src={user?.profileImageUrl}

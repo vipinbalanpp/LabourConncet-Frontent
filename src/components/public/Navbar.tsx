@@ -45,7 +45,7 @@ const Navbar = () => {
   return (
     <>
       <div className="border border-black">
-        <div className="flex justify-between items-center px-4 py-3 md:px-8">
+        <div className="flex justify-between items-center px-4 py-1 md:px-8">
           <Logo color="black" />
           <div className="md:hidden">
             <button onClick={toggleMenu}>
