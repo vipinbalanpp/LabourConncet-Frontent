@@ -59,7 +59,7 @@ const Navbar = () => {
           <div
             className={`${
               menuOpen ? "block" : "hidden"
-            } md:flex md:items-center md:gap-x-8 text-black font-semibold`}
+            } md:flex md:items-center md:gap-x-8 text-black font-semibold text-sm`}
           >
             <NavLink
               to="/"

@@ -1,3 +1,4 @@
+import { string } from "yup";
 import { IWorkerDetailsForStore } from "./worker";
 
 export interface IUserCredentials {
@@ -54,4 +55,22 @@ export interface DecodedToken {
 }
 export interface IResult {
   error: string;
+}
+
+export interface IMessage {
+  id: string;
+  senderId: number;
+  receiverId: number;
+  senderRole: string;
+  content: string;
+  read: boolean;
+  timestamp: Date;
+}
+export interface IPersonInfoForChat {
+  id: string;
+  name: string;
+  profileImageUrl: string;
+  partnerRole: string;
+  lastTimestamp: Date;
+  lastMessageContent: string;
 }

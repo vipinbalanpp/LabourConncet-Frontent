@@ -22,7 +22,7 @@ const Home = () => {
       <Banner />
       <PopularServices />
       <TopRatedWorkers />
-      {/* <TestMonialList /> */}
+      <TestMonialList />
       {!user && (
         <div className="flex   gap-14 md:flex-row flex-col p-4  md:px-20 pt-20">
           <div className="bg-[rgb(235,235,235)] h-[290px]  rounded-xl hover:shadow-lg hover:scale-105 duration-300">

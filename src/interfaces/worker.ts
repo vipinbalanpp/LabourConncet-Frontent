@@ -3,7 +3,7 @@ import { IAddress } from "./user";
 
 export interface IWorkerCredentials {
   fullName: string;
-  username: string
+  username: string;
   mobileNumber: string;
   email: string;
   password: string;
@@ -22,14 +22,14 @@ export interface IWorkerCredentials {
 }
 export interface IWorkerDetailsForStore {
   about: string;
-  id:string
-  address:IAddress
+  id: string;
+  address: IAddress;
 
   email: string;
 
   experience: string;
 
-  service: Iservice
+  service: Iservice;
 
   fullName: string;
 
@@ -38,28 +38,30 @@ export interface IWorkerDetailsForStore {
   mobileNumber: string;
 
   profileImageUrl: string;
-  
+
   createdAt: Date;
 
   role: string;
 
   blocked: boolean;
 
-  verified: boolean
+  verified: boolean;
 
   serviceCharge: string;
+
+  username: string;
 
   works: {};
 }
 export interface WorkerListTableProps {
   workers: IWorkerDetailsForStore[];
 }
-export interface IEditWorkerDetails{
-  fullName: string
-  mobileNumber:string
-  dateOfBirth: string
-  expertiseIn: string
-  experience: string
-  serviceCharge: string
-  about: string
+export interface IEditWorkerDetails {
+  fullName: string;
+  mobileNumber: string;
+  dateOfBirth: string;
+  expertiseIn: string;
+  experience: string;
+  serviceCharge: string;
+  about: string;
 }

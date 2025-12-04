@@ -9,23 +9,25 @@ const ServiceListing = () => {
   const [services, setServices] = useState<Iservice[] | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [searchInput, setSearchInput] = useState('');
+  const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const serviceResponse = await instance.get(
-          `service/api/v1/get-all-services?pageNumber=${currentPage - 1}&pageSize=6&searchInput=${searchInput}`
+          `service/api/v1/get-all-services?pageNumber=${
+            currentPage - 1
+          }&pageSize=9&searchInput=${searchInput}`
         );
-        console.log(serviceResponse, 'this is service response');
+        console.log(serviceResponse, "this is service response");
         setServices(serviceResponse.data.services);
         setTotalPages(serviceResponse.data.totalNumberOfPages + 1);
       } catch (error) {
-        console.error('Error fetching services:', error);
+        console.error("Error fetching services:", error);
       }
     };
     fetchData();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [searchInput, currentPage]);
 
   return (
@@ -41,9 +43,10 @@ const ServiceListing = () => {
         </div>
       </div>
       <div className="flex flex-wrap px-4 md:px-10 lg:px-14 mt-5 bg-white justify-center md:justify-between">
-        {services && services.map((service) => (
-          <Service key={service.serviceId} service={service} />
-        ))}
+        {services &&
+          services.map((service) => (
+            <Service key={service.serviceId} service={service} />
+          ))}
         {services?.length === 0 && (
           <div className="h-96 w-full flex items-center justify-center">
             <div
@@ -58,7 +61,11 @@ const ServiceListing = () => {
       </div>
       {services?.length !== 0 && (
         <div className="pt-5 bg-white">
-          <Pagination currentPage={currentPage} onPageChange={setCurrentPage} totalPages={totalPages - 1} />
+          <Pagination
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+            totalPages={totalPages - 1}
+          />
         </div>
       )}
     </>

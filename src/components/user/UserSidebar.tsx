@@ -1,11 +1,9 @@
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBell,
-  faChartBar,
   faEnvelope,
   faHardHat,
-  faHeart,
   faQuestionCircle,
   faSignOutAlt,
   faUser,
@@ -18,17 +16,19 @@ import { AppDispatch, RootState } from "../../redux/store";
 
 const UserSidebar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.user);
-
   const handleclick = (path: string) => {
     navigate(path);
   };
-
   const handleLogout = () => {
     dispatch(logout());
   };
-
+  const hideSidebar = location.pathname === "/user/messages";
+  if (hideSidebar) {
+    return <Outlet />;
+  }
   return (
     <div className="flex bg-white">
       <div className="w-72 h-screen bg-white sticky top-0 overflow-y-auto  shadow-lg">

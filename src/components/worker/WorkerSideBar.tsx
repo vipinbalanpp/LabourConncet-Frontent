@@ -7,7 +7,7 @@ import {
   faSignOutAlt,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
@@ -29,6 +29,10 @@ const WorkerSidebar = () => {
     dispatch(logout());
     navigate("/login");
   };
+  const location = useLocation();
+  if (location.pathname === "/worker/messages") {
+    return <Outlet />;
+  }
 
   return (
     <div className="flex  bg-white">

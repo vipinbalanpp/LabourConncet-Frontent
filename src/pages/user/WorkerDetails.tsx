@@ -20,7 +20,6 @@ import toast from "react-hot-toast";
 import { IAddress } from "../../interfaces/user";
 import instance from "../../config/axiozConfig";
 import AvailabilityCalendar from "../../components/worker/AvailabilityCalender";
-import GoogleMapsLocationSelector from "../../components/public/GoogleMapsLocationSelector";
 ReactModal.setAppElement("#root");
 
 const WorkerDetails = () => {
@@ -200,6 +199,18 @@ const WorkerDetails = () => {
       });
     console.log(formData);
   };
+  const handleMessage = () => {
+    const workerDetailsForChat = {
+      id: worker?.id,
+      name: worker?.username,
+      profileImageUrl: worker?.profileImageUrl,
+    };
+    navigate("/user/messages", {
+      state: {
+        workerDetailsForChat,
+      },
+    });
+  };
   return (
     <div className="bg-gray-50 min-h-screen p-8">
       <p className="text-3xl text-center font-bold mb-10">Worker Details</p>
@@ -248,7 +259,10 @@ const WorkerDetails = () => {
             </p>
           </div>
           <div className="flex gap-4 mt-7">
-            <button className="h-10 bg-blue-500 w-32 rounded-xl border text-white hover:bg-blue-600">
+            <button
+              onClick={handleMessage}
+              className="h-10 bg-blue-500 w-32 rounded-xl border text-white hover:bg-blue-600"
+            >
               Message
             </button>
             <button
